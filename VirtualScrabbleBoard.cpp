@@ -69,7 +69,7 @@ int placeTiles(){
 	int tilesPlayed = 0;
 	std::vector<int> premiumTiles;
 	bool allTiles = false;
-	bool hori = true;
+	bool hori;
 
 	std::cout << "\nEnter the word to be played:" << std::endl;
 	std::cin >> input;
@@ -81,7 +81,10 @@ int placeTiles(){
 	std::cin >> temp;
 
 	if (temp == "h" || temp == "H"){
-		bool hori = true;
+		hori = true;
+	}
+	else {
+		hori = false;
 	}
 
 	if (checkTiles(startX, startY, input, hori) == true){
