@@ -140,9 +140,17 @@ bool checkTiles(int startX, int startY, std::string input, bool hori){
 
 	if (hori == true){
 		for (int rowPos = 0; rowPos < input.length(); rowPos++){
-			if (tileInfo[startX + rowPos][startY].playablePos == true){
+			if (tileInfo[startX + rowPos][startY].playablePos == true){ //Check if ANY ONE TILE is in a valid position
 				validPlacement = true;
 				break;
+			}
+		}
+		for (int rowPos = 0; rowPos < input.length(); rowPos++){	//This must be true at EVERY position to be accepted
+			if (tileInfo[startX + rowPos][startY].letterTile != (char)'0'){	//If the tile is not empty check to see if the letters match
+				if (tileInfo[startX + rowPos][startY].letterTile != (char)input.at(rowPos)){
+					validPlacement = false;
+					break;
+				}
 			}
 		}
 	}
@@ -154,8 +162,16 @@ bool checkTiles(int startX, int startY, std::string input, bool hori){
 				break;
 			}
 		}
+		for (int colPos = 0; colPos < input.length(); colPos++){
+			if (tileInfo[startX][startY + colPos].letterTile != (char)'0'){
+				if (tileInfo[startX][startY + colPos].letterTile != (char)input.at(colPos)){
+					validPlacement = false;
+					break;
+				}
+			}
+		}
 	}
-
+	
 	return(validPlacement);
 
 }
