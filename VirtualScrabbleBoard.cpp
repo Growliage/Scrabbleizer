@@ -10,7 +10,7 @@ int pointCounter(std::string input, std::vector<int> premiumTiles, bool allTiles
 
 //Values used by the pointCounter()
 int boardValues[15][15] =
-{ 
+{
 	{ 5, 1, 1, 2, 1, 1, 1, 5, 1, 1, 1, 2, 1, 1, 5 },	//A
 	{ 1, 4, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 4, 1 },	//B
 	{ 1, 1, 4, 1, 1, 1, 2, 1, 2, 1, 1, 1, 4, 1, 1 },	//C
@@ -40,27 +40,27 @@ int main(){
 
 	//Initialize all the structs!
 
-		for (int rows = 0; rows < 15; rows++){
-			for (int cols = 0; cols < 15; cols++){
-				tileInfo[rows][cols].tileValue = boardValues[rows][cols];
+	for (int rows = 0; rows < 15; rows++){
+		for (int cols = 0; cols < 15; cols++){
+			tileInfo[rows][cols].tileValue = boardValues[rows][cols];
+		}
+	}
+	tileInfo[7][7].playablePos = true;	//Set the middle tile to be a place where a tile can be placed
+	do{
+		std::cout << "Board:" << std::endl;
+		for (int cols = 0; cols < 15; cols++){
+			std::cout << std::endl;
+			for (int rows = 0; rows < 15; rows++){
+				std::cout << tileInfo[rows][cols].playablePos;
 			}
 		}
-		tileInfo[7][7].playablePos = true;	//Set the middle tile to be a place where a tile can be placed
-		do{
-			std::cout << "Board:" << std::endl;
-			for (int cols = 0; cols < 15; cols++){
-				std::cout << std::endl;
-				for (int rows = 0; rows < 15; rows++){
-					std::cout << tileInfo[rows][cols].playablePos;
-				}
-			}
 
-			placeTiles();
+		placeTiles();
 
 	} while (true);
 }
 
-int placeTiles(){	
+int placeTiles(){
 
 	std::string input;
 	int startX;
@@ -171,7 +171,7 @@ bool checkTiles(int startX, int startY, std::string input, bool hori){
 			}
 		}
 	}
-	
+
 	return(validPlacement);
 
 }
