@@ -40,16 +40,16 @@ std::vector<pair<int, int>>boardDetection(cv::Mat image)
 			}
 		}
 	}
-	cout << "accumulator build " << endl;
 	//find global maxima
 	int gMax = 0;
-	for (int i = 0; i < accumulator.rows; i++) //y
-		for (int j = 0; j < accumulator.cols; j++) //x
+	for (int i = 0; i < accumulator.rows; i++){ //y
+		for (int j = 0; j < accumulator.cols; j++){ //x
 			if (accumulator.at<unsigned char>(i, j) > gMax)
 			{
 				gMax = accumulator.at<unsigned char>(i, j);
 			}
-	cout << "gMax found " << endl;
+		}
+	}
 	//threshold for votes in the accumulator
 	int thresh = gMax * 0.75;
 
@@ -59,36 +59,32 @@ std::vector<pair<int, int>>boardDetection(cv::Mat image)
 	std::vector< std::pair<int, int>> intersections;
 
 	waitKey(0);
-	int tres = 15;
+	int tres = 5;
+	int value;
 	//Search the accuulator for maxima
 	for (int i = 0; i < accumulator.rows; i++) //y
 	{
 		for (int j = 0; j < accumulator.cols; j++) //x
 			if (accumulator.at<unsigned char>(i, j) >= thresh) // threshold the points in the accumulator
 			{
-				int value = accumulator.at<unsigned char>(i, j);
+				value = accumulator.at<unsigned char>(i, j);
 
 				for (int ly = -tres; ly <= tres; ly++)
 				{
-					cout << "check ly " << endl;
 					for (int lx = -tres; lx <= tres; lx++)
 					{
-						cout << "check lx " << endl;
-						if ((ly + i == 0 && ly + i < accumulator.rows) && (lx + i == 0 && ly + i < accumulator.cols))
+						if ((ly + i >= 0 && ly + i < accumulator.rows) && (lx + j >= 0 && lx + j < accumulator.cols))
 						{
-							cout << "check ly + lx " << endl;
-							if (accumulator.at<unsigned char>(i + ly, j + lx) > value)
+							if ((accumulator.at<unsigned char>(i + ly, j + lx)) > value)
 							{
-								cout << "larger check" << endl;
 								value = accumulator.at<unsigned char>(i + ly, j + lx);
-								lx = ly = tres;
+								lx = ly = tres + 1;
 							}
 						}
 					}
 				}
 				if (value > accumulator.at<unsigned char>(i, j))
 					continue;
-				cout << "accumulator searched" << endl;
 				//compute points back into lines
 				int x1, x2, y1, y2;
 				x1 = x2 = y1 = y1 = 0;
@@ -108,13 +104,11 @@ std::vector<pair<int, int>>boardDetection(cv::Mat image)
 					y2 = img_edge.rows - 0;
 					x2 = (j - (x2*sin(i)) / cos(i));
 				}
-				cout << "line put into start end points" << endl;
 				//holds the lines starting point in first and end point in second
 				firstPoint.push_back(std::pair<int, int>(std::pair<int, int>(x1, y1)));
 				secondPoint.push_back(std::pair<int, int>(std::pair<int, int>(x2, y2)));
 			}
 	}
-	cout << "new lines found" << endl;
 //finding and segmenting the line intersection
 for (int i = 0; i < firstPoint.size(); i++)
 {
@@ -147,7 +141,6 @@ for (int i = 0; i < firstPoint.size(); i++)
 			{
 						if (Py > Lthres && Py < img_edge.rows)
 						{
-							cout << "intersection found" << endl;
 							intersections.push_back(std::pair<int, int>(std::pair<int, int>(Px, Py)));
 						}
 			}
@@ -199,7 +192,6 @@ for (int i = 0; i < intersections.size(); i++)
 						{
 							int lpx = intersections[l].first;
 							int lpy = intersections[l].second;
-
 							//find length of c
 							int c2 = abs(((kpx - lpx)*(kpx - lpx)) + ((kpy - lpy)*(kpy - lpy)));
 							int c = sqrt(c2);
@@ -236,7 +228,6 @@ for (int i = 0; i < intersections.size(); i++)
 
 										if (Angleadc < 91 && Angleadc > 89 && angleSum == 360)
 										{
-											cout << "board" << endl;
 												board.push_back(std::pair<int, int>(std::pair<int, int>(ipx, ipy)));
 												board.push_back(std::pair<int, int>(std::pair<int, int>(jpx, jpy)));
 												board.push_back(std::pair<int, int>(std::pair<int, int>(kpx, kpy)));
