@@ -11,12 +11,11 @@ using namespace std;
 std::vector<pair<int, int>>boardDetection(cv::Mat image)
 {
 	Mat img_edge, img_blur;
+	img_edge = image;
 	//image = cv::imread("C:/users/Bo/Pictures/redboard.jpg", 1);
-	cv::blur(image, img_blur, cv::Size(8, 8));
-	cv::Canny(img_blur, img_edge, 70, 90, 3);
-	cv::imshow("Image", image);
-	
-
+	//cv::blur(image, img_blur, cv::Size(8, 8));
+	//cv::Canny(img_blur, img_edge, 70, 90, 3);
+	//imshow("edge", img_edge);
 	//build accumulator use Mat for accumulator
 	//P[p_min .... p_max][theta_min(1 - 180).....theta_max]
 	int RHO = ((img_edge.rows * img_edge.rows) + (img_edge.cols * img_edge.cols));
@@ -41,6 +40,7 @@ std::vector<pair<int, int>>boardDetection(cv::Mat image)
 			}
 		}
 	}
+	cout << "accumulator build " << endl;
 	//find global maxima
 	int gMax = 0;
 	for (int i = 0; i < accumulator.rows; i++) //y
@@ -49,7 +49,7 @@ std::vector<pair<int, int>>boardDetection(cv::Mat image)
 			{
 				gMax = accumulator.at<unsigned char>(i, j);
 			}
-
+	cout << "gMax found " << endl;
 	//threshold for votes in the accumulator
 	int thresh = gMax * 0.75;
 
@@ -58,6 +58,7 @@ std::vector<pair<int, int>>boardDetection(cv::Mat image)
 	std::vector< std::pair<int, int>> secondPoint;
 	std::vector< std::pair<int, int>> intersections;
 
+	waitKey(0);
 	int tres = 15;
 	//Search the accuulator for maxima
 	for (int i = 0; i < accumulator.rows; i++) //y
@@ -69,21 +70,25 @@ std::vector<pair<int, int>>boardDetection(cv::Mat image)
 
 				for (int ly = -tres; ly <= tres; ly++)
 				{
+					cout << "check ly " << endl;
 					for (int lx = -tres; lx <= tres; lx++)
 					{
+						cout << "check lx " << endl;
 						if ((ly + i == 0 && ly + i < accumulator.rows) && (lx + i == 0 && ly + i < accumulator.cols))
 						{
+							cout << "check ly + lx " << endl;
 							if (accumulator.at<unsigned char>(i + ly, j + lx) > value)
 							{
+								cout << "larger check" << endl;
 								value = accumulator.at<unsigned char>(i + ly, j + lx);
-								lx = ly = tres + 1;
+								lx = ly = tres;
 							}
 						}
 					}
 				}
 				if (value > accumulator.at<unsigned char>(i, j))
 					continue;
-				
+				cout << "accumulator searched" << endl;
 				//compute points back into lines
 				int x1, x2, y1, y2;
 				x1 = x2 = y1 = y1 = 0;
@@ -103,11 +108,13 @@ std::vector<pair<int, int>>boardDetection(cv::Mat image)
 					y2 = img_edge.rows - 0;
 					x2 = (j - (x2*sin(i)) / cos(i));
 				}
+				cout << "line put into start end points" << endl;
 				//holds the lines starting point in first and end point in second
 				firstPoint.push_back(std::pair<int, int>(std::pair<int, int>(x1, y1)));
 				secondPoint.push_back(std::pair<int, int>(std::pair<int, int>(x2, y2)));
 			}
 	}
+	cout << "new lines found" << endl;
 //finding and segmenting the line intersection
 for (int i = 0; i < firstPoint.size(); i++)
 {
@@ -140,6 +147,7 @@ for (int i = 0; i < firstPoint.size(); i++)
 			{
 						if (Py > Lthres && Py < img_edge.rows)
 						{
+							cout << "intersection found" << endl;
 							intersections.push_back(std::pair<int, int>(std::pair<int, int>(Px, Py)));
 						}
 			}
@@ -149,9 +157,6 @@ for (int i = 0; i < firstPoint.size(); i++)
 
 //segment intersections to 1ind board
 int topLineLength = img_edge.cols * 0.80; // line threshold % of screen
-int botLineLength = img_edge.cols * 0.80;
-int leftLinelength = img_edge.rows * 0.70;
-int rigthLineLength = img_edge.rows * 0.70;
 int MaxLineLength = img_edge.cols * 1;
 std::vector< std::pair<int, int>> board;
 
@@ -179,7 +184,7 @@ for (int i = 0; i < intersections.size(); i++)
 				int b = sqrt(b2);
 
 				//if (b < LL + pl && b > LL - pl)
-				if (b > leftLinelength && b < MaxLineLength)//b length
+				if (b > topLineLength && b < MaxLineLength)//b length
 				{
 					//find length of abc
 					int abc2 = abs((a*a) + (b*b));
@@ -205,7 +210,7 @@ for (int i = 0; i < intersections.size(); i++)
 							float AngleBCC = ((a*a) + (b*b) - (bbc*bbc)) / (2 * (a*b));
 							float Anglebcc = acos(AngleBCC) * 180.0 / M_PIl;
 							
-							if (Anglebcc < 91 && Anglebcc > 89 && c > botLineLength && c < MaxLineLength) // instead of length == a if camera is placed above
+							if (Anglebcc < 91 && Anglebcc > 89 && c == a) // instead of length == a if camera is placed above
 							{
 								//find lendth of d
 								int d2 = abs(((ipx - lpx) * (ipx - lpx)) + ((ipy - lpy)*(ipy - lpy)));
@@ -219,7 +224,7 @@ for (int i = 0; i < intersections.size(); i++)
 									float AngleCDC = ((c*c) + (d*d) - (cdc*cdc)) / (2 * (c*d));
 									float Anglecdc = acos(AngleCDC) * 180.0 / M_PIl;
 
-									if (Anglecdc < 91 && Anglecdc > 89 && d > rigthLineLength && d < MaxLineLength) // instead of length == b if camera is placed above
+									if (Anglecdc < 91 && Anglecdc > 89 && d ==b) // instead of length == b if camera is placed above
 									{
 										int ADC = ((a*a) + (d*d));
 										int adc = sqrt(ADC);
@@ -231,7 +236,7 @@ for (int i = 0; i < intersections.size(); i++)
 
 										if (Angleadc < 91 && Angleadc > 89 && angleSum == 360)
 										{
-											
+											cout << "board" << endl;
 												board.push_back(std::pair<int, int>(std::pair<int, int>(ipx, ipy)));
 												board.push_back(std::pair<int, int>(std::pair<int, int>(jpx, jpy)));
 												board.push_back(std::pair<int, int>(std::pair<int, int>(kpx, kpy)));

@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="backgroundSubtraction.cpp" />
     <ClCompile Include="boardDetection.cpp" />
     <ClCompile Include="histogramequalization.cpp" />
-    <ClCompile Include="homography.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

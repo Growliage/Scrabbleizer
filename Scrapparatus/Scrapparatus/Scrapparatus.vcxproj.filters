@@ -24,7 +24,7 @@
     <ClCompile Include="histogramequalization.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="homography.cpp">
+    <ClCompile Include="backgroundSubtraction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

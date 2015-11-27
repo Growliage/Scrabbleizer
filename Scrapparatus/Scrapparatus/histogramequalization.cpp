@@ -15,11 +15,11 @@ cv::Mat histogramequalization(Mat image)
 	image = image;
 	int nPixels = image.rows * image.cols;
 
-	int histogram[256]; 
+	int histogram[256];
 	imageHistogram(image, histogram);
 
 	int cdf[256];
-	cdfcalc(histogram,cdf);
+	cdfcalc(histogram, cdf);
 
 	int equalize[256];
 	for (int i = 0; i < bin; i++)
@@ -33,6 +33,13 @@ cv::Mat histogramequalization(Mat image)
 		for (int x = 0; x < image.cols; x++)
 			eImage.at<unsigned char>(y, x) = (equalize[image.at<unsigned char>(y, x)]);
 
+	for (int i = 0; i < image.rows; i++){
+		for (int j = 0; j < image.cols; j++){
+			if (eImage.at<unsigned char>(i, j) > 200){
+				eImage.at<unsigned char>(i, j) = 0;
+			}
+}
+	}
 	return(eImage);
 }
 
