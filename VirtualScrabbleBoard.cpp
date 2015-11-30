@@ -7,19 +7,18 @@
 
 int main(){
 
-/*Used for testing purposes*/
+/*-----TESTING STUFF START!-----*/
 
 int width = 500;
 int height = 500;
 
 cv::Mat image(width, height, CV_8UC1, cv::Scalar(0));	//Stand in for input image
 
-/*Testing stuff ends here!*/
+/*-----TESTING STUFF END!-----*/
 
 //Forward declarations
 int placeTiles();
 bool checkTiles(int startX, int startY, std::string input, bool hori);
-//int pointCounter(std::string input, std::vector<int> premiumTiles, bool allTiles);
 //int pointCounter(std::string input, std::vector<int> premiumTiles, bool allTiles);
 
 //Values used by the pointCounter()
@@ -48,18 +47,14 @@ static float tempRows = (image.rows) / 15;
 
 //Structs array used for initialization
 struct tileStruct {
-	bool newTile = false;
-	bool playablePos = false;
-	char letterTile = '0';
-	int tileValue;
-	float x, y;
-	float w = tempCols;
-	float h = tempRows;
+	bool newTile = false;	//Was the tile played this turn?
+	bool playablePos = false;	//Is it a playable position?
+	char letterTile = '0';	//The letter found at the spcified coordinated
+	int tileValue;	//What kind of (premium) tile is it. Gotten from boardValues
+	float x, y;	//Overlay rectanlges position on the board
+	float w = tempCols;	//Used to find the width on a single tile
+	float h = tempRows;	//Used to find the height of a single tile
 } tileInfo[15][15];
-
-
-
-	//cv::namedWindow("Image", WINDOW_AUTOSIZE);
 
 
 	//Initialize all the structs!
@@ -73,6 +68,7 @@ struct tileStruct {
 	}
 	tileInfo[7][7].playablePos = true;	//Set the middle tile to be a place where a tile can be placed
 	do{
+		/*-----TESTING STUFF START!-----*/
 		for (int cols = 0; cols < 15; cols++){
 			for (int rows = 0; rows < 15; rows++){
 				rectangle(image,
@@ -81,8 +77,8 @@ struct tileStruct {
 					CV_RGB(0, 255, 255), 1);
 			}
 		}
+		/*----TESTING STUFF END!-----*/
 
-		//		updateWindow("Image");
 		placeTiles();
 		imshow("Image", image);
 		cv::waitKey(0);
@@ -91,7 +87,49 @@ struct tileStruct {
 	} while (true);
 }
 
-int placeTiles(){
+bool checkTiles(int startX, int startY, std::string input, bool hori){
+
+	bool validPlacement = false;
+
+	if (hori == true){
+		for (int rowPos = 0; rowPos < input.length(); rowPos++){
+			if (tileInfo[startX + rowPos][startY].playablePos == true){ //Check if ANY ONE TILE is in a valid position
+				validPlacement = true;
+				break;
+			}
+		}
+		for (int rowPos = 0; rowPos < input.length(); rowPos++){	//This must be true at EVERY position to be accepted
+			if (tileInfo[startX + rowPos][startY].letterTile != (char)'0'){	//If the tile is not empty check to see if the letters match
+				if (tileInfo[startX + rowPos][startY].letterTile != (char)input.at(rowPos)){
+					validPlacement = false;
+					break;
+				}
+			}
+		}
+	}
+	else
+	{
+		for (int colPos = 0; colPos < input.length(); colPos++){
+			if (tileInfo[startX][startY + colPos].playablePos == true){
+				validPlacement = true;
+				break;
+			}
+		}
+		for (int colPos = 0; colPos < input.length(); colPos++){
+			if (tileInfo[startX][startY + colPos].letterTile != (char)'0'){
+				if (tileInfo[startX][startY + colPos].letterTile != (char)input.at(colPos)){
+					validPlacement = false;
+					break;
+				}
+			}
+		}
+	}
+
+	return(validPlacement);
+
+}
+
+int placeTiles(int startX, int startY, bool hori){
 
 	std::string input;
 	int startX;
@@ -156,54 +194,33 @@ int placeTiles(){
 			allTiles = true;
 		}
 
-		//return(pointCounter(input, premiumTiles, allTiles));
-		return(1);
+		return(pointCounter(input, premiumTiles, allTiles));
 	}
 	else
 	{
 		std::cout << "\nInvalid placement!";
 	}
 
-};
+}
 
-bool checkTiles(int startX, int startY, std::string input, bool hori){
-
-	bool validPlacement = false;
+int removeTiles(int startX, int startY, bool hori){
 
 	if (hori == true){
+
 		for (int rowPos = 0; rowPos < input.length(); rowPos++){
-			if (tileInfo[startX + rowPos][startY].playablePos == true){ //Check if ANY ONE TILE is in a valid position
-				validPlacement = true;
-				break;
-			}
-		}
-		for (int rowPos = 0; rowPos < input.length(); rowPos++){	//This must be true at EVERY position to be accepted
-			if (tileInfo[startX + rowPos][startY].letterTile != (char)'0'){	//If the tile is not empty check to see if the letters match
-				if (tileInfo[startX + rowPos][startY].letterTile != (char)input.at(rowPos)){
-					validPlacement = false;
-					break;
-				}
+			if (tileInfo[startX + rowPos][startY].newTile == true){
+				tileInfo[startX + rowPos][startY].letterValue = '0';
+				tileInfo[startX + rowPos][startY].newTile = false;
 			}
 		}
 	}
-	else
+	else 
 	{
 		for (int colPos = 0; colPos < input.length(); colPos++){
-			if (tileInfo[startX][startY + colPos].playablePos == true){
-				validPlacement = true;
-				break;
-			}
-		}
-		for (int colPos = 0; colPos < input.length(); colPos++){
-			if (tileInfo[startX][startY + colPos].letterTile != (char)'0'){
-				if (tileInfo[startX][startY + colPos].letterTile != (char)input.at(colPos)){
-					validPlacement = false;
-					break;
-				}
+			if (tileInfo[startX][startY + colPos].newTile == true){
+				tileInfo[startX][startY + colPos].letterValue = '0'
+					tileInfo[startX][startY + colPos].newTile = false;
 			}
 		}
 	}
-
-	return(validPlacement);
-
 }
