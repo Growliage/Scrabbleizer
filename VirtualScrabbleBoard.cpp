@@ -5,6 +5,8 @@
 #include "opencv2\highgui\highgui.hpp"
 #include "opencv2\imgproc\imgproc.hpp"
 
+int main(){
+
 /*Used for testing purposes*/
 
 int width = 500;
@@ -55,7 +57,7 @@ struct tileStruct {
 	float h = tempRows;
 } tileInfo[15][15];
 
-int main(){
+
 
 	//cv::namedWindow("Image", WINDOW_AUTOSIZE);
 

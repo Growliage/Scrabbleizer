@@ -1,41 +1,152 @@
 #include "opencv2/opencv.hpp"
-#include <opencv2/highgui/highgui.hpp>"
+#include <opencv2/highgui/highgui.hpp>
+#include <fstream>
+#include <string>
+#include <iostream>
+#include <vector>
 
-using namespace cv;
-using namespace std;
 
-cv::Mat histogramequalization(Mat image);
-std::vector<pair<int, int>>boardDetection(cv::Mat image);
-cv::Mat BackgroundSubtract(Mat firstFrame, Mat startingImage);
+cv::Mat histogramequalization(cv::Mat image);
+std::vector<std::pair<int, int>>boardDetection(cv::Mat image);
+cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage);
 
 int main(int, char)
 {
-		Mat frame, firstFrame, BackgSubs, startingImage;
-		VideoCapture capture(1);
+
+	//Load dictionary!
+	std::cout << "Loading dictionary... This may take a while";
+
+	//std::string fileName = "data/2.txt";
+	std::ifstream dict("fileName");
+
+
+	//Moving the filestream into a vector
+	dict.open("data/2.txt");
+	std::vector<std::string> lines2;
+	for (std::string line; std::getline(dict, line);)
+		lines2.push_back(line);
+	dict.close();
+
+
+	dict.open("data/3.txt");
+	std::vector<std::string> lines3;
+	for (std::string line; std::getline(dict, line);)
+		lines3.push_back(line);
+	dict.close();
+
+
+	dict.open("data/4.txt");
+	std::vector<std::string> lines4;
+	for (std::string line; std::getline(dict, line);)
+		lines4.push_back(line);
+	dict.close();
+
+
+	dict.open("data/5.txt");
+	std::vector<std::string> lines5;
+	for (std::string line; std::getline(dict, line);)
+		lines5.push_back(line);
+	dict.close();
+
+
+	dict.open("data/6.txt");
+	std::vector<std::string> lines6;
+	for (std::string line; std::getline(dict, line);)
+		lines6.push_back(line);
+	dict.close();
+
+
+	dict.open("data/7.txt");
+	std::vector<std::string> lines7;
+	for (std::string line; std::getline(dict, line);)
+		lines7.push_back(line);
+	dict.close();
+
+
+	dict.open("data/8.txt");
+	std::vector<std::string> lines8;
+	for (std::string line; std::getline(dict, line);)
+		lines8.push_back(line);
+	dict.close();
+	
+
+	dict.open("data/9.txt");
+	std::vector<std::string> lines9;
+	for (std::string line; std::getline(dict, line);)
+		lines9.push_back(line);
+	dict.close();
+	
+
+	dict.open("data/10.txt");
+	std::vector<std::string> lines10;
+	for (std::string line; std::getline(dict, line);)
+		lines10.push_back(line);
+	dict.close();
+
+
+	dict.open("data/11.txt");
+	std::vector<std::string> lines11;
+	for (std::string line; std::getline(dict, line);)
+		lines11.push_back(line);
+	dict.close();
+
+
+	dict.open("data/12.txt");
+	std::vector<std::string> lines12;
+	for (std::string line; std::getline(dict, line);)
+		lines12.push_back(line);
+	dict.close();
+
+
+	dict.open("data/13.txt");
+	std::vector<std::string> lines13;
+	for (std::string line; std::getline(dict, line);)
+		lines13.push_back(line);
+	dict.close();
+
+
+	dict.open("data/14.txt");
+	std::vector<std::string> lines14;
+	for (std::string line; std::getline(dict, line);)
+		lines14.push_back(line);
+	dict.close();
+
+
+	dict.open("data/15.txt");
+	std::vector<std::string> lines15;
+	for (std::string line; std::getline(dict, line);)
+		lines15.push_back(line);
+	dict.close();
+
+
+	std::cout << "\nDictionary has been loaded." << std::endl;
+
+		cv::Mat frame, firstFrame, BackgSubs, startingImage;
+		cv::VideoCapture capture(1);
 		if (!capture.isOpened())
 			return -1;
 
 		capture >> firstFrame;
-		waitKey(0);
-		cout << " Place the board so that it is withind the border shown on the screen, the word Scrabble should be at the buttom of the green square. After this is done press anykey twice to continue " << endl;
+		cv::waitKey(0);
+		std::cout << " Place the board so that it is withind the border shown on the screen, the word Scrabble should be at the buttom of the green square. After this is done press anykey twice to continue " << std::endl;
 		for (;;)
 		{
 			capture >> frame; // get a new frame from camera
 			rectangle(frame, cvPoint(120,30), cvPoint(frame.cols-100,frame.rows-20), CV_RGB(50,255,0), 2);
 			imshow("image", frame);
-			if (waitKey(30) >= 0)
+			if (cv::waitKey(30) >= 0)
 				break;
 		}
 
 		cvtColor(firstFrame, firstFrame, CV_BGR2GRAY);
 
-		Mat equalizedImage1 = histogramequalization(firstFrame);
+		cv::Mat equalizedImage1 = histogramequalization(firstFrame);
 
 		capture >> startingImage;
 		cvtColor(startingImage, startingImage, CV_BGR2GRAY);
-		Mat equalizedImage2 = histogramequalization(startingImage);
+		cv::Mat equalizedImage2 = histogramequalization(startingImage);
 
-		Mat backGroundSubtraction = BackgroundSubtract(equalizedImage1, equalizedImage2);
+		cv::Mat backGroundSubtraction = BackgroundSubtract(equalizedImage1, equalizedImage2);
 		
 		/*for (int i = 0; i < backGroundSubtraction.rows; i++){
 			for (int j = 0; j < backGroundSubtraction.cols; j++){
@@ -48,7 +159,7 @@ int main(int, char)
 
 		
 
-		waitKey(0); 
+		cv::waitKey(0);
 		std::vector< std::pair<int, int>> scrabbleBoard;
 
 		while (scrabbleBoard.size() != 4){
@@ -59,8 +170,8 @@ int main(int, char)
 			int x = scrabbleBoard[i].first;
 			int y = scrabbleBoard[i].second;
 
-			cout << "x = " << x << " y = " << y << endl;
+			std::cout << "x = " << x << " y = " << y << std::endl;
 		}
-		waitKey(0);
+		cv::waitKey(0);
 		return(0);
 }
