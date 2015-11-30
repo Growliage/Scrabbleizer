@@ -1,11 +1,23 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "opencv2\core\core.hpp"
+#include "opencv2\highgui\highgui.hpp"
+#include "opencv2\imgproc\imgproc.hpp"
+
+/*Used for testing purposes*/
+
+int width = 500;
+int height = 500;
+
+cv::Mat image(width, height, CV_8UC1, cv::Scalar(0));	//Stand in for input image
+
+/*Testing stuff ends here!*/
 
 //Forward declarations
 int placeTiles();
 bool checkTiles(int startX, int startY, std::string input, bool hori);
-int pointCounter(std::string input, std::vector<int> premiumTiles, bool allTiles);
+//int pointCounter(std::string input, std::vector<int> premiumTiles, bool allTiles);
 //int pointCounter(std::string input, std::vector<int> premiumTiles, bool allTiles);
 
 //Values used by the pointCounter()
@@ -28,34 +40,51 @@ int boardValues[15][15] =
 	{ 5, 1, 1, 2, 1, 1, 1, 5, 1, 1, 1, 2, 1, 1, 5 }		//O
 };
 
+static float xOffset = 6.5; //% offset on the scrabble board from the edge to the playing field on x-axis(Assume upright board)
+static float tempCols = (image.cols) / 15;
+static float tempRows = (image.rows) / 15;
+
 //Structs array used for initialization
 struct tileStruct {
 	bool newTile = false;
 	bool playablePos = false;
 	char letterTile = '0';
 	int tileValue;
+	float x, y;
+	float w = tempCols;
+	float h = tempRows;
 } tileInfo[15][15];
 
 int main(){
+
+	//cv::namedWindow("Image", WINDOW_AUTOSIZE);
+
 
 	//Initialize all the structs!
 
 	for (int rows = 0; rows < 15; rows++){
 		for (int cols = 0; cols < 15; cols++){
 			tileInfo[rows][cols].tileValue = boardValues[rows][cols];
+			tileInfo[rows][cols].x = rows * tempRows;
+			tileInfo[rows][cols].y = cols * tempCols;
 		}
 	}
 	tileInfo[7][7].playablePos = true;	//Set the middle tile to be a place where a tile can be placed
 	do{
-		std::cout << "Board:" << std::endl;
 		for (int cols = 0; cols < 15; cols++){
-			std::cout << std::endl;
 			for (int rows = 0; rows < 15; rows++){
-				std::cout << tileInfo[rows][cols].playablePos;
+				rectangle(image,
+					cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y), //Point 1
+					cv::Point(tileInfo[rows][cols].x + tileInfo[rows][cols].w, tileInfo[rows][cols].y + tileInfo[rows][cols].h), //point 2
+					CV_RGB(0, 255, 255), 1);
 			}
 		}
 
+		//		updateWindow("Image");
 		placeTiles();
+		imshow("Image", image);
+		cv::waitKey(0);
+
 
 	} while (true);
 }
@@ -125,7 +154,8 @@ int placeTiles(){
 			allTiles = true;
 		}
 
-		return(pointCounter(input, premiumTiles, allTiles));
+		//return(pointCounter(input, premiumTiles, allTiles));
+		return(1);
 	}
 	else
 	{
