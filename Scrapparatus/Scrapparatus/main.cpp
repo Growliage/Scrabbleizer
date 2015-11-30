@@ -37,14 +37,17 @@ int main(int, char)
 
 		Mat backGroundSubtraction = BackgroundSubtract(equalizedImage1, equalizedImage2);
 		
-		for (int i = 0; i < backGroundSubtraction.rows; i++){
+		/*for (int i = 0; i < backGroundSubtraction.rows; i++){
 			for (int j = 0; j < backGroundSubtraction.cols; j++){
 				if (j < 100 || j > backGroundSubtraction.cols - 80 || i < 20 || i > backGroundSubtraction.rows-10)
 					backGroundSubtraction.at<unsigned char>(i, j) = 0;
 			}
-		}
+		}*/
 
 		imshow("image", backGroundSubtraction);
+
+		
+
 		waitKey(0); 
 		std::vector< std::pair<int, int>> scrabbleBoard;
 
