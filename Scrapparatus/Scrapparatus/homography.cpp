@@ -3,7 +3,7 @@
 using namespace cv;
 using namespace std;
 
-Mat A = (Mat_<double>(8, 1) << 0, 0, 0, 0, 0, 0, 0, 0); //We need this matrix in both the calculations for the coefficents and the calculations
+
 
 void MyFilledCircle(Mat img, Point center) //This is simply to draw circles on the pictures so the two can be checked. This will not be in the final program
 {
@@ -17,18 +17,20 @@ void MyFilledCircle(Mat img, Point center) //This is simply to draw circles on t
 		lineType);
 }
 
-double homography(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, int xO1, int xO2, int xO3, int xO4, int yO1, int yO2, int yO3, int yO4){ //8 points are needed for this. The points should correspond to each other in the two pictures.
+double homography(Vec vector, Point topLeft, Point bottomRight){ //8 points are needed for this. The points should correspond to each other in the two pictures.
 
-	Mat M = (Mat_<double>(8, 8) << x1, y1, 1, 0, 0, 0, -(x1*xO1), -(y1*xO1), //The matrix holding the linear system that has to be used
-		0, 0, 0, x1, y1, 1, -(x1*yO1), -(y1*yO1),
-		x2, y2, 1, 0, 0, 0, -(x2*xO2), -(y2*xO2),
-		0, 0, 0, x2, y2, 1, -(x2*yO2), -(y2*yO2),
-		x3, y3, 1, 0, 0, 0, -(x3*xO3), -(y3*xO3),
-		0, 0, 0, x3, y3, 1, -(x3*yO3), -(y3*yO3),
-		x4, y4, 1, 0, 0, 0, -(x4*xO4), -(y4*xO4),
-		0, 0, 0, x4, y4, 1, -(x4*yO4), -(y4*yO4));
+	Mat A = (Mat_<double>(8, 1) << 0, 0, 0, 0, 0, 0, 0, 0); //We need this matrix in both the calculations for the coefficents and the calculations
 
-	Mat B = (Mat_<double>(8, 1) << xO1, yO1, xO2, yO2, xO3, yO3, xO4, yO4); //Our output image coordinates. This is used for our coefficient calculations.
+	Mat M = (Mat_<double>(8, 8) << vector[0].first, vector[0].second, 1, 0, 0, 0, -(vector[0].first*topLeft.x), -(vector[0].second*topLeft.y), //The matrix holding the linear system that has to be used
+		0, 0, 0, vector[0].first, vector[0].second, 1, -(vector[0].first*topLeft.x), -(vector[0].second*topLeft.y),
+		vector[1].first, vector[1].second, 1, 0, 0, 0, -(vector[1].first*bottomRight.x), -(vector[1].second*topLeft.y),
+		0, 0, 0, vector[1].first, vector[1].second, 1, -(vector[1].first*bottomRight.x), -(vector[1].second*topLeft.y),
+		vector[2].first, vector[2].second, 1, 0, 0, 0, -(vector[2].first*topLeft.x), -(vector[2].second*bottomRight.y),
+		0, 0, 0, vector[2].first, vector[2].second, 1, -(vector[2].first*topLeft.x), -(vector[2].second*bottomRight.y),
+		vector[3].first, vector[3].second, 1, 0, 0, 0, -(vector[3].first*bottomRight.x), -(vector[3].second*bottomRight.y),
+		0, 0, 0, vector[3].first, vector[3].second, 1, -(vector[3].first*bottomRight.x), -(vector[3].second*bottomRight.y));
+
+	Mat B = (Mat_<double>(8, 1) << topLeft.x, topLeft.y, bottomRight.x, topLeft.y, topLeft.x, bottomRight.y, bottomRight.x, bottomRight.y); //Our output image coordinates. This is used for our coefficient calculations.
 
 
 	Mat gh = M.inv(); //Inverses our matrix.
@@ -38,24 +40,19 @@ double homography(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4
 			A.at<double>(i, 0) = A.at<double>(i, 0) + gh.at<double>(i, j) * B.at<double>(j, 0);
 		}
 	}
-	waitKey(0); //From this we can now insert a random point, x, and calculate where it will be in the picture, xO.
-	waitKey(0);
 	
 	
-	return 0;
+	return A;
 }
 
-double homogx(int x, int y){ //Calculates what the new point's x-value will be in the second image
-	double xO = 0;
+double homog(int x, int y){ //Calculates what the new point's x-value will be in the second image
+	double xO = 0, yO = 0;
 	xO = (( A.at<double>(0,0) * x + A.at<double>(1,0) * y + A.at<double>(2,0)) / (A.at<double>(6,0) * x + A.at<double>(7,0) * y + 1));
-	return xO;
+	yO = (A.at<double>(3, 0) * x + A.at<double>(4, 0) * y + A.at<double>(5, 0)) / (A.at<double>(6, 0) * x + A.at<double>(7, 0) * y + 1);
+	Point2f Out(xO, yO);
+	return xO, yO;
 }
 
-double homogy(int x, int y){ //Calculates what the new point's y-value will be in the second image
-	double yO = 0;
-	yO = (A.at<double>(3,0) * x + A.at<double>(4,0) * y + A.at<double>(5,0)) / (A.at<double>(6,0) * x + A.at<double>(7,0) * y + 1);
-	return yO;
-}
 
 int main(int, char) //Most of the image shows in here won't actually be used. But it is also through this we get the coordinates for all the calculations
 {
