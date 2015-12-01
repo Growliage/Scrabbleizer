@@ -27,6 +27,12 @@
     <ClCompile Include="backgroundSubtraction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="homography.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="changeTurn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">

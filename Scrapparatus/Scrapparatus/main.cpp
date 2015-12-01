@@ -9,6 +9,9 @@
 cv::Mat histogramequalization(cv::Mat image);
 std::vector<std::pair<int, int>>boardDetection(cv::Mat image);
 cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage);
+cv::Mat homography(std::vector<std::pair<int,int>>, cv::Point topLeft, cv::Point bottomRight);
+cv::Point2d homog(int x, int y); // call to find corrospoding points in perfect image
+int changeTurn(int players);
 
 int main(int, char)
 {
@@ -176,6 +179,29 @@ int main(int, char)
 
 			std::cout << "x = " << x << " y = " << y << std::endl;
 		}
+
+		int x1 = scrabbleBoard[0].first;
+		int y1 = scrabbleBoard[0].second;
+		int x2 = scrabbleBoard[1].first;
+		int y2 = scrabbleBoard[1].second;
+		int x3 = scrabbleBoard[2].first;
+		int y3 = scrabbleBoard[2].second;
+		int x4 = scrabbleBoard[3].first;
+		int y4 = scrabbleBoard[3].second;
+
+		homography(scrabbleBoard, cv::Point(120, 30), cv::Point(frame.cols - 100, frame.rows - 20));
+		//virtual board
+		
+
+		int players = 0;
+		std::cout << "Choose number of players (1-4)\n";
+		std::cin >> players;
+		changeTurn(players);
+		//in changeTurn.cpp
+				//letter placement
+				//letter recognition
+				//contest word
+				//SOWPODS
 		cv::waitKey(0);
 		return(0);
 }
