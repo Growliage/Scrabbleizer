@@ -51,7 +51,7 @@ std::vector<pair<int, int>>boardDetection(cv::Mat image)
 		}
 	}
 	//threshold for votes in the accumulator
-	int thresh = gMax * 0.75;
+	int thresh = gMax * 0.50;
 
 	//different vectors for start and end point for the line calc and line intersection point
 	std::vector< std::pair<int, int>> firstPoint;
@@ -149,7 +149,7 @@ for (int i = 0; i < firstPoint.size(); i++)
 }
 
 //segment intersections to 1ind board
-int topLineLength = img_edge.cols * 0.80; // line threshold % of screen
+int topLineLength = img_edge.cols * 0.70; // line threshold % of screen
 int MaxLineLength = img_edge.cols * 1;
 std::vector< std::pair<int, int>> board;
 

@@ -3,8 +3,7 @@
 cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage)
 {
 	cv::Mat backgSub;
-	//namedWindow("edges", 1);
-	//namedWindow("edges the second", 1);
+
 		cv::Mat edges2 = firstFrame;
 		cv::Mat edges = startingImage; // get a new frame from camera
 
@@ -22,11 +21,8 @@ cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage)
 		}
 
 		GaussianBlur(bg, bg, cv::Size(7, 7), 1.5, 1.5);
-		//GaussianBlur(edges2, edges2, cv::Size(7, 7), 1.5, 1.5);
-		Canny(bg, bg, 0, 30, 3);
-		//Canny(edges2, edges2, 0, 30, 3);
-		//GaussianBlur(bg, backgSub, cv::Size(7, 7), 1.5, 1.5);
-		//Canny(backgSub, backgSub, 0, 30, 3);
-	// the camera will be deinitialized automatically in VideoCapture destructor
+
+		Canny(bg, bg, 25, 30, 3);
+
 	return bg;
 }

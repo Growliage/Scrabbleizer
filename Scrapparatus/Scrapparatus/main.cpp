@@ -128,7 +128,7 @@ int main(int, char)
 
 		capture >> firstFrame;
 		cv::waitKey(0);
-		std::cout << " Place the board so that it is withind the border shown on the screen, the word Scrabble should be at the buttom of the green square. After this is done press anykey twice to continue " << std::endl;
+		std::cout << " Place the board so that it is withind the border shown on the screen, the word Scrabble should be at the buttom of the green square. After this is done press anykey three times to continue " << std::endl;
 		for (;;)
 		{
 			capture >> frame; // get a new frame from camera
@@ -148,13 +148,17 @@ int main(int, char)
 
 		cv::Mat backGroundSubtraction = BackgroundSubtract(equalizedImage1, equalizedImage2);
 		
-		/*for (int i = 0; i < backGroundSubtraction.rows; i++){
-			for (int j = 0; j < backGroundSubtraction.cols; j++){
-				if (j < 100 || j > backGroundSubtraction.cols - 80 || i < 20 || i > backGroundSubtraction.rows-10)
+		for (int i = 0; i < backGroundSubtraction.rows; i++){ //y
+			for (int j = 0; j < backGroundSubtraction.cols; j++){ //x
+				if (j < 100 || j > backGroundSubtraction.cols - 80 || i < 20 || i > backGroundSubtraction.rows - 10)
 					backGroundSubtraction.at<unsigned char>(i, j) = 0;
+				if (j > 130 && j < backGroundSubtraction.cols - 115){
+					if (i > 50 && i < backGroundSubtraction.rows - 40){
+						backGroundSubtraction.at<unsigned char>(i, j) = 0;
+					}
+				}
 			}
-		}*/
-
+		}
 		imshow("image", backGroundSubtraction);
 
 		
