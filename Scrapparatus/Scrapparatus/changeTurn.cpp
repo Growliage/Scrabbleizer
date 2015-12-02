@@ -4,22 +4,43 @@
 using namespace cv;
 using namespace std;
 
+cv::Mat histogramequalization(cv::Mat image);
+cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage);
+
 int changeTurn(int players){
+	cv::Mat frame, beforeTurn, afterTurn, temp;
 	bool endGame = false; //A whole bunch of declarations. endGame is used to check if the game is ended or not
 	Mat points = (Mat_<int>(4, 1) << 0, 0, 0, 0);	//Matrix used to hold the amount of points each player has and receives
 	int nmbOfPlayers = players;
 	int turn = 0; //Used for checking whose turn it is
 	double key = 0; //Used to check what key has been pressed by the user
-	Mat image = imread("C:/Users/Johan/Pictures/snap2.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-	cvWaitKey(30);
-	imshow("Blob", image); //If this isn't here, waitKey doesn't work. It will be changed to a picture of the board during play.
+	
 	cout << nmbOfPlayers << " playing.\n";
 	waitKey(0); //to make sure that p1 has played a word before it starts
 	while (endGame == false){
 		int counter = rand() % 100; //This is is just a placeholder for the point counting class/program
 		if (turn == 0){ //Checking for whose turn it is
 			cout << "P1's turn.\n"; //Shows whose turn it is
-			key = waitKey(0); //Wait for the player to put in a word
+
+			cv::VideoCapture capture(1);
+			if (!capture.isOpened())
+				return -1;
+
+			capture >> beforeTurn;
+			cout << "capture before" << endl;
+			waitKey(0);
+			capture >> afterTurn;
+			cout << "capture after" << endl;
+			waitKey(0);
+			cvtColor(beforeTurn, beforeTurn, CV_BGR2GRAY);
+			cvtColor(afterTurn, afterTurn, CV_BGR2GRAY);
+			beforeTurn = histogramequalization(beforeTurn);
+			afterTurn = histogramequalization(afterTurn);
+			temp = BackgroundSubtract(beforeTurn, afterTurn);
+
+			imshow("letters", temp);
+			imshow("afterTurn", afterTurn);
+
 			if (key == 108){
 				cout << "Word check!\n";
 				/*if (SOWPODSsearch(string) == 0){

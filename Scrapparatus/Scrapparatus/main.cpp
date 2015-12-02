@@ -9,13 +9,13 @@
 cv::Mat histogramequalization(cv::Mat image);
 std::vector<std::pair<int, int>>boardDetection(cv::Mat image);
 cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage);
-cv::Mat homography(int,int,int,int,int,int,int,int, cv::Point topLeft, cv::Point bottomRight);
+double homography(int,int,int,int,int,int,int,int, cv::Point topLeft, cv::Point bottomRight);
 cv::Point2d homog(int x, int y); // call to find corrospoding points in perfect image
 int changeTurn(int players);
 
 int main(int, char)
 {
-
+	/*
 	//Load dictionary!
 	std::cout << "Loading dictionary... This may take a while";
 
@@ -120,7 +120,7 @@ int main(int, char)
 	for (std::string line; std::getline(dict, line);)
 		lines15.push_back(line);
 	dict.close();
-
+	*/
 
 	std::cout << "\nDictionary has been loaded." << std::endl;
 
@@ -162,15 +162,19 @@ int main(int, char)
 				}
 			}
 		}
-		imshow("image", backGroundSubtraction);
+		//imshow("image", backGroundSubtraction);
 
-		
-
+		GaussianBlur(backGroundSubtraction, backGroundSubtraction, cv::Size(7, 7), 1.5, 1.5);
+		Canny(backGroundSubtraction, backGroundSubtraction, 25, 30, 3);
 		cv::waitKey(0);
 		std::vector< std::pair<int, int>> scrabbleBoard;
 
 		while (scrabbleBoard.size() != 4){
 			scrabbleBoard = boardDetection(backGroundSubtraction);
+		}
+
+		if (scrabbleBoard.size() != 4){
+			std::cout << "could not find board closing down try again" << std::endl;
 		}
 
 		for (int i = 0; i < scrabbleBoard.size(); i++){
@@ -189,9 +193,14 @@ int main(int, char)
 		int x4 = scrabbleBoard[3].first;
 		int y4 = scrabbleBoard[3].second;
 
+
 		homography(x1,y1,x2,y2,x3,y3,x4,y4, cv::Point(120, 30), cv::Point(frame.cols - 100, frame.rows - 20));
+		
+		cv::Rect boardRect(120,30,(frame.cols-100-120),(frame.rows-20-30));
+		//cv::Mat croppedBoard = startingImage(boardRect).clone();
 		//virtual board
 		
+		//imshow("croppedImage", croppedBoard);
 
 		int players = 0;
 		std::cout << "Choose number of players (1-4)\n";
@@ -202,6 +211,5 @@ int main(int, char)
 				//letter recognition
 				//contest word
 				//SOWPODS
-		cv::waitKey(0);
 		return(0);
 }
