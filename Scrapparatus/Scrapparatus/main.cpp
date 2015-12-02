@@ -173,6 +173,11 @@ int main(int, char)
 			scrabbleBoard = boardDetection(backGroundSubtraction);
 		}
 
+		if (scrabbleBoard.size() != 4){
+			std::cout << "could not find board closing down try again" << std::endl;
+			exit(0);
+		}
+
 		for (int i = 0; i < scrabbleBoard.size(); i++){
 			int x = scrabbleBoard[i].first;
 			int y = scrabbleBoard[i].second;
@@ -191,8 +196,12 @@ int main(int, char)
 
 
 		homography(x1,y1,x2,y2,x3,y3,x4,y4, cv::Point(120, 30), cv::Point(frame.cols - 100, frame.rows - 20));
+		
+		cv::Rect boardRect(120,30,(frame.cols-100-120),(frame.rows-20-30));
+		//cv::Mat croppedBoard = startingImage(boardRect).clone();
 		//virtual board
 		
+		//imshow("croppedImage", croppedBoard);
 
 		int players = 0;
 		std::cout << "Choose number of players (1-4)\n";

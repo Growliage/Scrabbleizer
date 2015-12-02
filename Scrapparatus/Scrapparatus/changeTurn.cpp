@@ -11,7 +11,7 @@ int changeTurn(int players){
 	int turn = 0; //Used for checking whose turn it is
 	double key = 0; //Used to check what key has been pressed by the user
 	
-	cv::Mat frame, firstFrame, BackgSubs, startingImage;
+	/*cv::Mat frame, firstFrame, BackgSubs, startingImage;
 	cv::VideoCapture capture(1);
 	if (!capture.isOpened())
 		return -1;
@@ -23,7 +23,7 @@ int changeTurn(int players){
 		imshow("image", frame);
 		if (cv::waitKey(30) >= 0)
 			break;
-	}
+	}*/
 
 	cout << nmbOfPlayers << " playing.\n";
 	waitKey(0); //to make sure that p1 has played a word before it starts
