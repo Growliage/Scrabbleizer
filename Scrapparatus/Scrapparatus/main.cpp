@@ -9,7 +9,7 @@
 cv::Mat histogramequalization(cv::Mat image);
 std::vector<std::pair<int, int>>boardDetection(cv::Mat image);
 cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage);
-cv::Mat homography(std::vector<std::pair<int,int>>, cv::Point topLeft, cv::Point bottomRight);
+cv::Mat homography(int,int,int,int,int,int,int,int, cv::Point topLeft, cv::Point bottomRight);
 cv::Point2d homog(int x, int y); // call to find corrospoding points in perfect image
 int changeTurn(int players);
 
@@ -189,7 +189,7 @@ int main(int, char)
 		int x4 = scrabbleBoard[3].first;
 		int y4 = scrabbleBoard[3].second;
 
-		homography(scrabbleBoard, cv::Point(120, 30), cv::Point(frame.cols - 100, frame.rows - 20));
+		homography(x1,y1,x2,y2,x3,y3,x4,y4, cv::Point(120, 30), cv::Point(frame.cols - 100, frame.rows - 20));
 		//virtual board
 		
 
