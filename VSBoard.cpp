@@ -114,7 +114,7 @@ int main(){
 			hori = false;
 		}
 
-		placeTiles(startX, startY, input, hori);
+		std::cout << placeTiles(startX, startY, input, hori) << std::endl;
 
 	} while (true);
 }
