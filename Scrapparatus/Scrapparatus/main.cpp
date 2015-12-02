@@ -212,6 +212,5 @@ int main(int, char)
 				//letter recognition
 				//contest word
 				//SOWPODS
-		cv::waitKey(0);
 		return(0);
 }
