@@ -15,7 +15,7 @@ int changeTurn(int players);
 
 int main(int, char)
 {
-
+	/*
 	//Load dictionary!
 	std::cout << "Loading dictionary... This may take a while";
 
@@ -120,7 +120,7 @@ int main(int, char)
 	for (std::string line; std::getline(dict, line);)
 		lines15.push_back(line);
 	dict.close();
-
+	*/
 
 	std::cout << "\nDictionary has been loaded." << std::endl;
 
@@ -162,10 +162,10 @@ int main(int, char)
 				}
 			}
 		}
-		imshow("image", backGroundSubtraction);
+		//imshow("image", backGroundSubtraction);
 
-		
-
+		GaussianBlur(backGroundSubtraction, backGroundSubtraction, cv::Size(7, 7), 1.5, 1.5);
+		Canny(backGroundSubtraction, backGroundSubtraction, 25, 30, 3);
 		cv::waitKey(0);
 		std::vector< std::pair<int, int>> scrabbleBoard;
 
@@ -175,7 +175,6 @@ int main(int, char)
 
 		if (scrabbleBoard.size() != 4){
 			std::cout << "could not find board closing down try again" << std::endl;
-			exit(0);
 		}
 
 		for (int i = 0; i < scrabbleBoard.size(); i++){
