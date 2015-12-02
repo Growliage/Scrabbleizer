@@ -7,16 +7,16 @@ using namespace std;
 
 Mat A = (Mat_<double>(8, 1) << 0, 0, 0, 0, 0, 0, 0, 0); //We need this matrix in both the calculations for the coefficents and the calculations
 
-double homography(std::vector<std::pair<int,int>> vector, cv::Point topLeft, cv::Point bottomRight){ //8 points are needed for this. The points should correspond to each other in the two pictures.
+double homography(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, cv::Point topLeft, cv::Point bottomRight){ //8 points are needed for this. The points should correspond to each other in the two pictures.
 
-	Mat M = (Mat_<double>(8, 8) << vector[0].first, vector[0].second, 1, 0, 0, 0, -(vector[0].first*topLeft.x), -(vector[0].second*topLeft.y), //The matrix holding the linear system that has to be used
-		0, 0, 0, vector[0].first, vector[0].second, 1, -(vector[0].first*topLeft.x), -(vector[0].second*topLeft.y),
-		vector[1].first, vector[1].second, 1, 0, 0, 0, -(vector[1].first*bottomRight.x), -(vector[1].second*topLeft.y),
-		0, 0, 0, vector[1].first, vector[1].second, 1, -(vector[1].first*bottomRight.x), -(vector[1].second*topLeft.y),
-		vector[2].first, vector[2].second, 1, 0, 0, 0, -(vector[2].first*topLeft.x), -(vector[2].second*bottomRight.y),
-		0, 0, 0, vector[2].first, vector[2].second, 1, -(vector[2].first*topLeft.x), -(vector[2].second*bottomRight.y),
-		vector[3].first, vector[3].second, 1, 0, 0, 0, -(vector[3].first*bottomRight.x), -(vector[3].second*bottomRight.y),
-		0, 0, 0, vector[3].first, vector[3].second, 1, -(vector[3].first*bottomRight.x), -(vector[3].second*bottomRight.y));
+	Mat M = (Mat_<double>(8, 8) << x1, y1, 1, 0, 0, 0, -(x1*topLeft.x), -(y1*topLeft.y), //The matrix holding the linear system that has to be used
+		0, 0, 0, x1, y1, 1, -(x1*topLeft.x), -(y1*topLeft.y),
+		x2, y2, 1, 0, 0, 0, -(x2*bottomRight.x), -(y2*topLeft.y),
+		0, 0, 0, x2, y2, 1, -(x2*bottomRight.x), -(y2*topLeft.y),
+		x3, y3, 1, 0, 0, 0, -(x3*topLeft.x), -(y3*bottomRight.y),
+		0, 0, 0, x3, y3, 1, -(x3*topLeft.x), -(y3*bottomRight.y),
+		x4, y4, 1, 0, 0, 0, -(x4*bottomRight.x), -(y4*bottomRight.y),
+		0, 0, 0, x4, y4, 1, -(x4*bottomRight.x), -(y4*bottomRight.y));
 
 	Mat B = (Mat_<double>(8, 1) << topLeft.x, topLeft.y, bottomRight.x, topLeft.y, topLeft.x, bottomRight.y, bottomRight.x, bottomRight.y); //Our output image coordinates. This is used for our coefficient calculations.
 
