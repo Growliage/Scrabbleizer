@@ -24,8 +24,9 @@ int main(){
 
 	/*-----TESTING STUFF START!-----*/
 
-	int width = 500;
-	int height = 500;
+	int width = 400;
+	int height = 400;
+
 
 	cv::Mat image(width, height, CV_8UC1, cv::Scalar(0));	//Stand in for input image
 
@@ -35,7 +36,7 @@ int main(){
 	//Forward declarations
 	int placeTiles(int startX, int startY, std::string input, bool hori);
 	bool checkTiles(int startX, int startY, std::string input, bool hori);
-	int removeTiles(int startX, int startY, std::string input, bool hori);
+	void removeTiles(int startX, int startY, std::string input, bool hori);
 
 	//int pointCounter(std::string input, std::vector<int> premiumTiles, bool allTiles);
 
@@ -64,12 +65,12 @@ int main(){
 	static float tempRows = (image.rows) / 15;
 
 	//Variables used for input
-	std::string input;
-	int startX;
-	int startY;
-	std::string temp;
-	bool hori;
-
+	std::string input = "";
+	std::string choice = "";
+	int startX = 0;
+	int startY = 0;
+	std::string temp = "";
+	bool hori = true;
 
 	//Initialize all the structs!
 
@@ -83,14 +84,11 @@ int main(){
 	tileInfo[7][7].playablePos = true;	//Set the middle tile to be a place where a tile can be placed
 	do{
 		/*-----TESTING: DRAWS THE BOARD-----*/
+		image = cv::Mat::zeros(width, height, image.type());
 		for (int cols = 0; cols < 15; cols++){
 			for (int rows = 0; rows < 15; rows++){
-				cv::rectangle(image,
-					cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y), //Point 1
-					cv::Point(tileInfo[rows][cols].x + tileInfo[rows][cols].w, tileInfo[rows][cols].y + tileInfo[rows][cols].h), //point 2
-					CV_RGB(0, 255, 255), 1);
+				cv::rectangle(image, cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y),	cv::Point(tileInfo[rows][cols].x + tileInfo[rows][cols].w, tileInfo[rows][cols].y + tileInfo[rows][cols].h), CV_RGB(0, 255, 255), 1, 1);
 				//Draw text in fields
-				//cv::String letter = std::string(tileInfo[rows][cols].letterTile, 1);
 				cv::putText(image, tileInfo[rows][cols].cvLetterTile, cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar::all(255), 1, 1, false);
 			}
 		}
@@ -98,23 +96,39 @@ int main(){
 		cv::waitKey(30);
 		/*----TESTING STUFF END!-----*/
 
-		std::cout << "\nEnter the word to be played:" << std::endl;
-		std::cin >> input;
-		std::cout << "\nX: ";
-		std::cin >> startX;
-		std::cout << "\nY: ";
-		std::cin >> startY;
-		std::cout << "\n(V)ertical or (H)orizontal? ";
-		std::cin >> temp;
 
-		if (temp == "h" || temp == "H"){
-			hori = true;
-		}
-		else {
-			hori = false;
-		}
 
-		std::cout << placeTiles(startX, startY, input, hori) << std::endl;
+		std::cout << "\nEnter the word to be played or press 1 to remove the last played tiles:" << std::endl;
+		std::cin >> choice;
+		if (choice != "1"){
+
+			for (int cols = 0; cols < 15; cols++){
+				for (int rows = 0; rows < 15; rows++){
+					tileInfo[rows][cols].newTile = false;
+				}
+			}
+
+			input = choice;
+			std::cout << "\nX: ";
+			std::cin >> startX;
+			std::cout << "\nY: ";
+			std::cin >> startY;
+			std::cout << "\n(V)ertical or (H)orizontal? ";
+			std::cin >> temp;
+
+			if (temp == "h" || temp == "H"){
+				hori = true;
+			}
+			else {
+				hori = false;
+			}
+
+			std::cout << placeTiles(startX, startY, input, hori) << std::endl;
+		} 
+		else
+		{
+			removeTiles(startX, startY, input, hori);
+		}
 
 	} while (true);
 }
@@ -176,12 +190,12 @@ int placeTiles(int startX, int startY, std::string input, bool hori){
 
 			for (int rowPos = 0; rowPos < input.length(); rowPos++){
 				if (tileInfo[startX][startY + rowPos].letterTile == '0'){
+					tileInfo[startX + rowPos][startY].newTile = true;
 					tilesPlayed++;
 				}
 				premiumTiles.push_back(tileInfo[startX + rowPos][startY].tileValue);
 				tileInfo[startX + rowPos][startY].letterTile = input.at(rowPos);
 				tileInfo[startX + rowPos][startY].cvLetterTile = input.at(rowPos);
-				tileInfo[startX + rowPos][startY].newTile = true;
 				tileInfo[startX + rowPos][startY + 1].playablePos = true;
 				tileInfo[startX + rowPos][startY - 1].playablePos = true;
 			}
@@ -192,12 +206,12 @@ int placeTiles(int startX, int startY, std::string input, bool hori){
 
 			for (int colPos = 0; colPos < input.length(); colPos++){
 				if (tileInfo[startX][startY + colPos].letterTile == '0'){
+					tileInfo[startX][startY + colPos].newTile = true;
 					tilesPlayed++;
 				}
 				premiumTiles.push_back(tileInfo[startX][startY + colPos].tileValue);
 				tileInfo[startX][startY + colPos].letterTile = input.at(colPos);
 				tileInfo[startX ][startY + colPos].cvLetterTile = input.at(colPos);
-				tileInfo[startX][startY + colPos].newTile = true;
 				tileInfo[startX + 1][startY + colPos].playablePos = true;
 				tileInfo[startX - 1][startY + colPos].playablePos = true;
 
@@ -220,12 +234,13 @@ int placeTiles(int startX, int startY, std::string input, bool hori){
 
 }
 
-int removeTiles(int startX, int startY, std::string input, bool hori){
+void removeTiles(int startX, int startY, std::string input, bool hori){
 
-	if (hori == true){
+	if (hori != true){
 		for (int colPos = 0; colPos < input.length(); colPos++){
 			if (tileInfo[startX][startY + colPos].newTile == true){
 				tileInfo[startX][startY + colPos].letterTile = '0';
+				tileInfo[startX][startY + colPos].cvLetterTile = "";
 				tileInfo[startX][startY + colPos].newTile = false;
 			}
 		}
@@ -235,9 +250,9 @@ int removeTiles(int startX, int startY, std::string input, bool hori){
 		for (int rowPos = 0; rowPos < input.length(); rowPos++){
 			if (tileInfo[startX + rowPos][startY].newTile == true){
 				tileInfo[startX + rowPos][startY].letterTile = '0';
+				tileInfo[startX + rowPos][startY].cvLetterTile = "";
 				tileInfo[startX + rowPos][startY].newTile = false;
 			}
 		}
 	}
-	return(1);
 }
