@@ -29,12 +29,14 @@ int main(){
 
 	cv::Mat image(width, height, CV_8UC1, cv::Scalar(0));	//Stand in for input image
 
+
 	/*-----TESTING STUFF END!-----*/
 
 	//Forward declarations
 	int placeTiles(int startX, int startY, std::string input, bool hori);
 	bool checkTiles(int startX, int startY, std::string input, bool hori);
 	int removeTiles(int startX, int startY, std::string input, bool hori);
+
 	//int pointCounter(std::string input, std::vector<int> premiumTiles, bool allTiles);
 
 	//Values used by the pointCounter()
@@ -92,6 +94,8 @@ int main(){
 				cv::putText(image, tileInfo[rows][cols].cvLetterTile, cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar::all(255), 1, 1, false);
 			}
 		}
+		imshow("Image", image);
+		cv::waitKey(30);
 		/*----TESTING STUFF END!-----*/
 
 		std::cout << "\nEnter the word to be played:" << std::endl;
@@ -111,9 +115,6 @@ int main(){
 		}
 
 		placeTiles(startX, startY, input, hori);
-		imshow("Image", image);
-		cv::waitKey(0);
-
 
 	} while (true);
 }
@@ -162,6 +163,8 @@ bool checkTiles(int startX, int startY, std::string input, bool hori){
 
 int placeTiles(int startX, int startY, std::string input, bool hori){
 
+	int pointCounter(std::string input, std::vector<int> premiumTiles, bool allTiles);
+
 	int tilesPlayed = 0;
 	bool allTiles = false;
 	std::vector<int> premiumTiles;
@@ -207,8 +210,8 @@ int placeTiles(int startX, int startY, std::string input, bool hori){
 			allTiles = true;
 		}
 
-		//return(pointCounter(input, premiumTiles, allTiles));
-		return(1);
+		return(pointCounter(input, premiumTiles, allTiles));
+
 	}
 	else
 	{
