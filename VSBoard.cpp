@@ -5,6 +5,14 @@
 #include "opencv2\highgui\highgui.hpp"
 #include "opencv2\imgproc\imgproc.hpp"
 
+/*NOTE: STUFF THAT NEEDS DOING;
+
+	-Incorporate background subtraction
+	-Tile analyzer for new tiles on the board
+	-Cropper for letter analyzer
+
+*/
+
 float tempCols;
 float tempRows;
 
@@ -20,23 +28,32 @@ struct tileStruct {
 	int h = tempRows;	//Used to find the height of a single tile
 } tileInfo[15][15];
 
+/*NOTE: REMEMBER TO REMOVE MAIN!*/
 int main(){
-
-	/*-----TESTING STUFF START!-----*/
 
 	int width = 400;
 	int height = 400;
 
-
 	cv::Mat image(width, height, CV_8UC1, cv::Scalar(0));	//Stand in for input image
+	cv::Mat imageSubtracted(width, height, CV_8UC1, cv::Scalar(0));	//Stand in for subtracted image
+		
+	void VSBoard(cv::Mat image, cv::Mat imageSubtracted);
+	VSBoard(image, imageSubtracted);
+}
 
+void VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 
-	/*-----TESTING STUFF END!-----*/
+	int height = image.rows;
+	int width = image.cols;
+
 
 	//Forward declarations
 	int placeTiles(int startX, int startY, std::string input, bool hori);
 	bool checkTiles(int startX, int startY, std::string input, bool hori);
 	void removeTiles(int startX, int startY, std::string input, bool hori);
+	std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted);
+	std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc);
+
 
 	//int pointCounter(std::string input, std::vector<int> premiumTiles, bool allTiles);
 
@@ -96,7 +113,9 @@ int main(){
 		cv::waitKey(30);
 		/*----TESTING STUFF END!-----*/
 
-
+		//tileAnalyzer and tileCropper should be somewhere around here
+		std::vector<std::pair<int,int>> tileLoc = tileAnalyzer(imageSubtracted);
+		std::string input = tileCropper(image, tileLoc);
 
 		std::cout << "\nEnter the word to be played or press 1 to remove the last played tiles:" << std::endl;
 		std::cin >> choice;
@@ -132,6 +151,7 @@ int main(){
 
 	} while (true);
 }
+
 
 bool checkTiles(int startX, int startY, std::string input, bool hori){
 
@@ -255,4 +275,42 @@ void removeTiles(int startX, int startY, std::string input, bool hori){
 			}
 		}
 	}
+}
+
+std::vector<std::pair<int,int>> tileAnalyzer(cv::Mat imageSubtracted){
+
+	//TODO:Find the tiles that contains changes (foreground)
+	//NOTE: Foreground will be white (255)
+	
+	float threshold = 0.8;	//Threshold for when a a location is noted down
+
+	std::vector<std::pair<int,int>> tileLoc;
+
+	for (int rows = 0; rows < 15; rows++){
+		for (int cols = 0; cols < 15; cols++){
+			int pixelsCounter = 0;
+			int totalPixelsinStruct = tileInfo[rows][cols].w * tileInfo[rows][cols].h;	//NOTE: Maybe move this out of the loops scope
+			for (int tileRows = tileInfo[rows][cols].x; tileRows > tileInfo[rows][cols].x + tileInfo[rows][cols].w; tileRows++){
+				for (int tileCols = tileInfo[rows][cols].y; tileCols > tileInfo[rows][cols].y + tileInfo[rows][cols].h; tileCols++){
+					if ((imageSubtracted.at<char>(tileRows, tileCols) == 255)){
+						pixelsCounter++;
+					}
+				}	//tile cols
+			}	//tile rows
+			if (((float)pixelsCounter / (float)totalPixelsinStruct) > threshold){
+				tileLoc.push_back(std::make_pair(rows, cols));
+			}
+		}	//Cols on image
+	}	//Rows on image
+
+	return(tileLoc);
+
+}
+
+std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc){
+
+	//TODO: Send tileStruct region to letter recognition
+
+	
+	return("Hello:)");
 }
