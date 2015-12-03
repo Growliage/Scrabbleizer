@@ -22,7 +22,14 @@ int changeTurn(int players){
 		if (!capture.isOpened())
 			return -1;
 
-		capture >> beforeTurn;
+		//capture >> beforeTurn;
+		bool grabResult = capture.grab();
+		if (!grabResult) {
+			cout << "Something wrong.";
+		}
+		else {
+			capture.retrieve(beforeTurn);
+		}
 		cout << "capture before" << endl;
 
 		int counter = rand() % 100; //This is is just a placeholder for the point counting class/program
@@ -31,17 +38,18 @@ int changeTurn(int players){
 		
 			waitKey(0);
 			capture >> afterTurn;
+			capture >> afterTurn;
+			imshow(" before", beforeTurn);
 			cout << "capture after" << endl;
-			
 			cvtColor(beforeTurn, beforeTurn, CV_BGR2GRAY);
 			cvtColor(afterTurn, afterTurn, CV_BGR2GRAY);
 			beforeTurn = histogramequalization(beforeTurn);
 			afterTurn = histogramequalization(afterTurn);
 			temp = BackgroundSubtract(beforeTurn, afterTurn);
-			cv::erode(temp, temp, cv::Mat(), cv::Point(-1, -1), 1, 1, 1);
 
 			imshow("letters", temp);
 			imshow("afterTurn", afterTurn);
+
 			key = waitKey(0);
 			if (key == 108){
 				cout << "Word check!\n";
@@ -58,19 +66,21 @@ int changeTurn(int players){
 		else if (turn == 1){
 			cout << "P2's turn.\n";
 		
-			key = waitKey(0);
-			capture >> afterTurn;
-			cout << "capture after" << endl;
 			waitKey(0);
+			capture >> afterTurn;
+			capture >> afterTurn;
+			imshow(" before", beforeTurn);
+			cout << "capture after" << endl;
 			cvtColor(beforeTurn, beforeTurn, CV_BGR2GRAY);
 			cvtColor(afterTurn, afterTurn, CV_BGR2GRAY);
 			beforeTurn = histogramequalization(beforeTurn);
 			afterTurn = histogramequalization(afterTurn);
 			temp = BackgroundSubtract(beforeTurn, afterTurn);
-			cv::erode(temp, temp, cv::Mat(), cv::Point(-1, -1), 1, 1, 1);
 
 			imshow("letters", temp);
 			imshow("afterTurn", afterTurn);
+
+			key = waitKey(0);
 			if (key == 108){
 				cout << "Word check!\n";
 				/*if (SOWPODSsearch(string) == 0){
@@ -86,19 +96,21 @@ int changeTurn(int players){
 		else if (turn == 2){
 			cout << "P3's turn.\n";
 			
-			key = waitKey(0);
-			capture >> afterTurn;
-			cout << "capture after" << endl;
 			waitKey(0);
+			capture >> afterTurn;
+			capture >> afterTurn;
+			imshow(" before", beforeTurn);
+			cout << "capture after" << endl;
 			cvtColor(beforeTurn, beforeTurn, CV_BGR2GRAY);
 			cvtColor(afterTurn, afterTurn, CV_BGR2GRAY);
 			beforeTurn = histogramequalization(beforeTurn);
 			afterTurn = histogramequalization(afterTurn);
 			temp = BackgroundSubtract(beforeTurn, afterTurn);
-			cv::erode(temp, temp, cv::Mat(), cv::Point(-1, -1), 1, 1, 1);
 
 			imshow("letters", temp);
 			imshow("afterTurn", afterTurn);
+
+			key = waitKey(0);
 			if (key == 108){
 				cout << "Word check!\n";
 				/*if (SOWPODSsearch(string) == 0){
@@ -114,19 +126,21 @@ int changeTurn(int players){
 		else {
 			cout << "P4's turn.\n";
 
-			key = waitKey(0);
-			capture >> afterTurn;
-			cout << "capture after" << endl;
 			waitKey(0);
+			capture >> afterTurn;
+			capture >> afterTurn;
+			imshow(" before", beforeTurn);
+			cout << "capture after" << endl;
 			cvtColor(beforeTurn, beforeTurn, CV_BGR2GRAY);
 			cvtColor(afterTurn, afterTurn, CV_BGR2GRAY);
 			beforeTurn = histogramequalization(beforeTurn);
 			afterTurn = histogramequalization(afterTurn);
 			temp = BackgroundSubtract(beforeTurn, afterTurn);
-			cv::erode(temp, temp, cv::Mat(), cv::Point(-1, -1), 1, 1, 1);
 
 			imshow("letters", temp);
 			imshow("afterTurn", afterTurn);
+
+			key = waitKey(0);
 			if (key == 108){
 				cout << "Word check!\n";
 				/*if (SOWPODSsearch(string) == 0){
