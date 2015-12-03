@@ -8,7 +8,7 @@
 
 cv::Mat histogramequalization(cv::Mat image);
 std::vector<std::pair<int, int>>boardDetection(cv::Mat image);
-cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage);
+cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage, int threshold);
 double homography(int,int,int,int,int,int,int,int, cv::Point topLeft, cv::Point bottomRight);
 cv::Point2d homog(int x, int y); // call to find corrospoding points in perfect image
 int changeTurn(int players);
@@ -149,7 +149,7 @@ int main(int, char)
 		cvtColor(startingImage, startingImage, CV_BGR2GRAY);
 		cv::Mat equalizedImage2 = histogramequalization(startingImage);
 
-		cv::Mat backGroundSubtraction = BackgroundSubtract(equalizedImage1, equalizedImage2);
+		cv::Mat backGroundSubtraction = BackgroundSubtract(equalizedImage1, equalizedImage2, 70);
 		
 		for (int i = 0; i < backGroundSubtraction.rows; i++){ //y
 			for (int j = 0; j < backGroundSubtraction.cols; j++){ //x
@@ -196,7 +196,7 @@ int main(int, char)
 
 		homography(x1,y1,x2,y2,x3,y3,x4,y4, cv::Point(120, 30), cv::Point(frame.cols - 100, frame.rows - 20));
 		
-		//cv::Rect boardRect(120,30,(frame.cols-100-120),(frame.rows-20-30));
+		cv::Rect boardRect(120,30,(frame.cols-100-120),(frame.rows-20-30));
 		//cv::Mat croppedBoard = startingImage(boardRect).clone();
 		//virtual board
 		
