@@ -196,7 +196,7 @@ int main(int, char)
 
 		homography(x1,y1,x2,y2,x3,y3,x4,y4, cv::Point(120, 30), cv::Point(frame.cols - 100, frame.rows - 20));
 		
-		cv::Rect boardRect(120,30,(frame.cols-100-120),(frame.rows-20-30));
+		//cv::Rect boardRect(120,30,(frame.cols-100-120),(frame.rows-20-30));
 		//cv::Mat croppedBoard = startingImage(boardRect).clone();
 		//virtual board
 		
