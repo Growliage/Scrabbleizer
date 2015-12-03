@@ -19,6 +19,5 @@ cv::Mat sumFilter(cv::Mat inImage, cv::Mat outImage, int threshold){
 		}
 	}
 
-
 	return outImage;
 }
