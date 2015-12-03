@@ -163,9 +163,9 @@ int main(int, char)
 			}
 		}
 		//imshow("image", backGroundSubtraction);
-
 		GaussianBlur(backGroundSubtraction, backGroundSubtraction, cv::Size(7, 7), 1.5, 1.5);
 		Canny(backGroundSubtraction, backGroundSubtraction, 25, 30, 3);
+		imshow("bgs", backGroundSubtraction);
 		cv::waitKey(0);
 		std::vector< std::pair<int, int>> scrabbleBoard;
 

@@ -19,8 +19,6 @@ cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage)
 				}
 			}
 		}
-
-
-
+		
 	return bg;
 }
