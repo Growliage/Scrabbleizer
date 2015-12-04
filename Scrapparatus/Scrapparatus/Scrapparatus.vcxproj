@@ -17,6 +17,7 @@
     <ClCompile Include="histogramequalization.cpp" />
     <ClCompile Include="homography.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="sumFilter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />

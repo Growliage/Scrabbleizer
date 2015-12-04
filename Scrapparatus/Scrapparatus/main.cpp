@@ -8,7 +8,7 @@
 
 cv::Mat histogramequalization(cv::Mat image);
 std::vector<std::pair<int, int>>boardDetection(cv::Mat image);
-cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage);
+cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage, int threshold);
 double homography(int,int,int,int,int,int,int,int, cv::Point topLeft, cv::Point bottomRight);
 cv::Point2d homog(int x, int y); // call to find corrospoding points in perfect image
 int changeTurn(int players);
@@ -149,7 +149,7 @@ int main(int, char)
 		cvtColor(startingImage, startingImage, CV_BGR2GRAY);
 		cv::Mat equalizedImage2 = histogramequalization(startingImage);
 
-		cv::Mat backGroundSubtraction = BackgroundSubtract(equalizedImage1, equalizedImage2);
+		cv::Mat backGroundSubtraction = BackgroundSubtract(equalizedImage1, equalizedImage2, 70);
 		
 		for (int i = 0; i < backGroundSubtraction.rows; i++){ //y
 			for (int j = 0; j < backGroundSubtraction.cols; j++){ //x
@@ -163,9 +163,9 @@ int main(int, char)
 			}
 		}
 		//imshow("image", backGroundSubtraction);
-
 		GaussianBlur(backGroundSubtraction, backGroundSubtraction, cv::Size(7, 7), 1.5, 1.5);
 		Canny(backGroundSubtraction, backGroundSubtraction, 25, 30, 3);
+		imshow("bgs", backGroundSubtraction);
 		cv::waitKey(0);
 		std::vector< std::pair<int, int>> scrabbleBoard;
 

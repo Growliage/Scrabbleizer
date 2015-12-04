@@ -1,6 +1,6 @@
 #include "opencv2/opencv.hpp"
 
-cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage)
+cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage, int threshold)
 {
 	cv::Mat backgSub;
 
@@ -11,7 +11,7 @@ cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage)
 
 		for (int i = 0; i < bg.rows; i++){
 			for (int j = 0; j < bg.cols; j++){
-				if (bg.at<uchar>(i, j) > 70){
+				if (bg.at<uchar>(i, j) > threshold){
 					bg.at<uchar>(i, j) = 255;
 				}
 				else{
@@ -19,8 +19,6 @@ cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage)
 				}
 			}
 		}
-
-
-
+		
 	return bg;
 }
