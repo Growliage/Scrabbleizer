@@ -14,8 +14,8 @@ void boundingBox(cv::Mat image);
 bool compareRectx(const cv::Rect &a, const cv::Rect &b);
 bool compareRecty(const cv::Rect &a, const cv::Rect &b);
 
-int main(int, char){
-	cv::Mat letter = cv::imread("C:/LetterRecognition/word.jpg", 0);
+int letterRecognition(cv::Mat letter){
+	//cv::Mat letter = cv::imread("C:/LetterRecognition/word.jpg", 0);
 	//***************************Threshold & scale image*********************
 	for (int y = 0; y < letter.rows; y++){
 		for (int x = 0; x < letter.cols; x++){

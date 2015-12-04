@@ -42,7 +42,6 @@ struct tileStruct {
 int main(){
 
 
-		
 	void VSBoard(cv::Mat image, cv::Mat imageSubtracted);
 	VSBoard(image, imageSubtracted);
 }
@@ -112,9 +111,9 @@ void VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 				cv::putText(image, tileInfo[rows][cols].cvLetterTile, cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar::all(255), 1, 1, false);
 			}
 		}
-		imshow("Image", image);
-		imshow("subtracted", imageSubtracted);
-		cv::waitKey(30);
+		//imshow("Image", image);
+		//imshow("subtracted", imageSubtracted);
+		//cv::waitKey(30);
 		/*----TESTING STUFF END!-----*/
 
 		//tileAnalyzer and tileCropper should be somewhere around here
@@ -132,14 +131,16 @@ void VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 			}
 
 			input = choice;
-			std::cout << "\nX: ";
-			std::cin >> startX;
-			std::cout << "\nY: ";
-			std::cin >> startY;
-			std::cout << "\n(V)ertical or (H)orizontal? ";
-			std::cin >> temp;
+			startX = tileLoc[0].first;
+			startY = tileLoc[0].second;
+			//std::cout << "\nX: ";
+			//std::cin >> startX;
+			//std::cout << "\nY: ";
+			//std::cin >> startY;
+			//std::cout << "\n(V)ertical or (H)orizontal? ";
+			//std::cin >> temp;
 
-			if (temp == "h" || temp == "H"){
+			if (tileLoc[0].first != tileLoc[1].first){
 				hori = true;
 			}
 			else {
@@ -317,6 +318,7 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 
 	//Forward declaration
 	std::string letterRecognition(cv::Mat imageSlice);
+
 	cv::Mat imageSlice;
 	cv::Mat imageROI;
 	std::string sWord = "";
@@ -328,6 +330,8 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 		int h = tileInfo[tileLoc[i].first][tileLoc[i].second].h;
 		imageROI = image(cv::Rect(x, y, w, h));
 		imageROI.copyTo(imageSlice);
+		imshow("slice", imageSlice);
+		cv::waitKey(0);
 		sWord.append(letterRecognition(imageSlice));
 	}
 
