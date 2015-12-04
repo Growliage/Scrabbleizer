@@ -282,7 +282,11 @@ std::vector<std::pair<int,int>> tileAnalyzer(cv::Mat imageSubtracted){
 	//TODO:Find the tiles that contains changes (foreground)
 	//NOTE: Foreground will be white (255)
 	
+<<<<<<< HEAD
 	float threshold = 0.8;	//Threshold for when a location needs to be noted
+=======
+	float threshold = 0.8;	//Threshold for when a a location is noted down
+>>>>>>> VSBoard
 
 	std::vector<std::pair<int,int>> tileLoc;
 
@@ -310,9 +314,13 @@ std::vector<std::pair<int,int>> tileAnalyzer(cv::Mat imageSubtracted){
 std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc){
 
 	//TODO: Send tileStruct region to letter recognition
+<<<<<<< HEAD
 	std::string returnedWord ="";
 
 	//returnedWord.append();
+=======
+
+>>>>>>> VSBoard
 	
 	return("Hello:)");
 }
