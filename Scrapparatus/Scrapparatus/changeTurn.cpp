@@ -10,13 +10,14 @@ cv::Mat sumFilter(cv::Mat inImage, cv::Mat outImage, int threshold);
 
 int changeTurn(int players){
 	cv::Mat frame, beforeTurn, afterTurn, temp;
+
 	bool endGame = false; //A whole bunch of declarations. endGame is used to check if the game is ended or not
 	Mat points = (Mat_<int>(4, 1) << 0, 0, 0, 0);	//Matrix used to hold the amount of points each player has and receives
 	int nmbOfPlayers = players;
 	int turn = 0; //Used for checking whose turn it is
 	double key = 0; //Used to check what key has been pressed by the user
-	int Threshold = 70;
-	int sumThreshold = 1000;
+	int Threshold = 80;
+	int sumThreshold = 675;
 
 	cout << nmbOfPlayers << " playing.\n";
 	waitKey(0); //to make sure that p1 has played a word before it starts
@@ -40,11 +41,9 @@ int changeTurn(int players){
 			cout << "P1's turn.\n"; //Shows whose turn it is
 			capture >> beforeTurn;
 			capture >> beforeTurn;
-
 			waitKey(0);
 			capture >> afterTurn;
 			capture >> afterTurn;
-
 			imshow(" before", beforeTurn);
 			cout << "capture after" << endl;
 			cvtColor(beforeTurn, beforeTurn, CV_BGR2GRAY);
