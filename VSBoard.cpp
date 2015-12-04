@@ -5,6 +5,14 @@
 #include "opencv2\highgui\highgui.hpp"
 #include "opencv2\imgproc\imgproc.hpp"
 
+/*NOTE: STUFF THAT NEEDS DOING;
+
+	-Incorporate background subtraction
+	-Tile analyzer for new tiles on the board
+	-Cropper for letter analyzer
+
+*/
+
 float tempCols;
 float tempRows;
 
@@ -20,22 +28,32 @@ struct tileStruct {
 	int h = tempRows;	//Used to find the height of a single tile
 } tileInfo[15][15];
 
+/*NOTE: REMEMBER TO REMOVE MAIN!*/
 int main(){
 
-	/*-----TESTING STUFF START!-----*/
-
-	int width = 500;
-	int height = 500;
+	int width = 400;
+	int height = 400;
 
 	cv::Mat image(width, height, CV_8UC1, cv::Scalar(0));	//Stand in for input image
+	cv::Mat imageSubtracted(width, height, CV_8UC1, cv::Scalar(0));	//Stand in for subtracted image
+		
+	void VSBoard(cv::Mat image, cv::Mat imageSubtracted);
+	VSBoard(image, imageSubtracted);
+}
 
+void VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 
-	/*-----TESTING STUFF END!-----*/
+	int height = image.rows;
+	int width = image.cols;
+
 
 	//Forward declarations
 	int placeTiles(int startX, int startY, std::string input, bool hori);
 	bool checkTiles(int startX, int startY, std::string input, bool hori);
-	int removeTiles(int startX, int startY, std::string input, bool hori);
+	void removeTiles(int startX, int startY, std::string input, bool hori);
+	std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted);
+	std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc);
+
 
 	//int pointCounter(std::string input, std::vector<int> premiumTiles, bool allTiles);
 
@@ -64,12 +82,12 @@ int main(){
 	static float tempRows = (image.rows) / 15;
 
 	//Variables used for input
-	std::string input;
-	int startX;
-	int startY;
-	std::string temp;
-	bool hori;
-
+	std::string input = "";
+	std::string choice = "";
+	int startX = 0;
+	int startY = 0;
+	std::string temp = "";
+	bool hori = true;
 
 	//Initialize all the structs!
 
@@ -83,14 +101,11 @@ int main(){
 	tileInfo[7][7].playablePos = true;	//Set the middle tile to be a place where a tile can be placed
 	do{
 		/*-----TESTING: DRAWS THE BOARD-----*/
+		image = cv::Mat::zeros(width, height, image.type());
 		for (int cols = 0; cols < 15; cols++){
 			for (int rows = 0; rows < 15; rows++){
-				cv::rectangle(image,
-					cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y), //Point 1
-					cv::Point(tileInfo[rows][cols].x + tileInfo[rows][cols].w, tileInfo[rows][cols].y + tileInfo[rows][cols].h), //point 2
-					CV_RGB(0, 255, 255), 1);
+				cv::rectangle(image, cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y),	cv::Point(tileInfo[rows][cols].x + tileInfo[rows][cols].w, tileInfo[rows][cols].y + tileInfo[rows][cols].h), CV_RGB(0, 255, 255), 1, 1);
 				//Draw text in fields
-				//cv::String letter = std::string(tileInfo[rows][cols].letterTile, 1);
 				cv::putText(image, tileInfo[rows][cols].cvLetterTile, cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar::all(255), 1, 1, false);
 			}
 		}
@@ -98,26 +113,45 @@ int main(){
 		cv::waitKey(30);
 		/*----TESTING STUFF END!-----*/
 
-		std::cout << "\nEnter the word to be played:" << std::endl;
-		std::cin >> input;
-		std::cout << "\nX: ";
-		std::cin >> startX;
-		std::cout << "\nY: ";
-		std::cin >> startY;
-		std::cout << "\n(V)ertical or (H)orizontal? ";
-		std::cin >> temp;
+		//tileAnalyzer and tileCropper should be somewhere around here
+		std::vector<std::pair<int,int>> tileLoc = tileAnalyzer(imageSubtracted);
+		std::string input = tileCropper(image, tileLoc);
 
-		if (temp == "h" || temp == "H"){
-			hori = true;
-		}
-		else {
-			hori = false;
-		}
+		std::cout << "\nEnter the word to be played or press 1 to remove the last played tiles:" << std::endl;
+		std::cin >> choice;
+		if (choice != "1"){
 
-		std::cout << placeTiles(startX, startY, input, hori) << std::endl;
+			for (int cols = 0; cols < 15; cols++){
+				for (int rows = 0; rows < 15; rows++){
+					tileInfo[rows][cols].newTile = false;
+				}
+			}
+
+			input = choice;
+			std::cout << "\nX: ";
+			std::cin >> startX;
+			std::cout << "\nY: ";
+			std::cin >> startY;
+			std::cout << "\n(V)ertical or (H)orizontal? ";
+			std::cin >> temp;
+
+			if (temp == "h" || temp == "H"){
+				hori = true;
+			}
+			else {
+				hori = false;
+			}
+
+			std::cout << placeTiles(startX, startY, input, hori) << std::endl;
+		} 
+		else
+		{
+			removeTiles(startX, startY, input, hori);
+		}
 
 	} while (true);
 }
+
 
 bool checkTiles(int startX, int startY, std::string input, bool hori){
 
@@ -176,12 +210,12 @@ int placeTiles(int startX, int startY, std::string input, bool hori){
 
 			for (int rowPos = 0; rowPos < input.length(); rowPos++){
 				if (tileInfo[startX][startY + rowPos].letterTile == '0'){
+					tileInfo[startX + rowPos][startY].newTile = true;
 					tilesPlayed++;
 				}
 				premiumTiles.push_back(tileInfo[startX + rowPos][startY].tileValue);
 				tileInfo[startX + rowPos][startY].letterTile = input.at(rowPos);
 				tileInfo[startX + rowPos][startY].cvLetterTile = input.at(rowPos);
-				tileInfo[startX + rowPos][startY].newTile = true;
 				tileInfo[startX + rowPos][startY + 1].playablePos = true;
 				tileInfo[startX + rowPos][startY - 1].playablePos = true;
 			}
@@ -192,12 +226,12 @@ int placeTiles(int startX, int startY, std::string input, bool hori){
 
 			for (int colPos = 0; colPos < input.length(); colPos++){
 				if (tileInfo[startX][startY + colPos].letterTile == '0'){
+					tileInfo[startX][startY + colPos].newTile = true;
 					tilesPlayed++;
 				}
 				premiumTiles.push_back(tileInfo[startX][startY + colPos].tileValue);
 				tileInfo[startX][startY + colPos].letterTile = input.at(colPos);
 				tileInfo[startX ][startY + colPos].cvLetterTile = input.at(colPos);
-				tileInfo[startX][startY + colPos].newTile = true;
 				tileInfo[startX + 1][startY + colPos].playablePos = true;
 				tileInfo[startX - 1][startY + colPos].playablePos = true;
 
@@ -220,12 +254,13 @@ int placeTiles(int startX, int startY, std::string input, bool hori){
 
 }
 
-int removeTiles(int startX, int startY, std::string input, bool hori){
+void removeTiles(int startX, int startY, std::string input, bool hori){
 
-	if (hori == true){
+	if (hori != true){
 		for (int colPos = 0; colPos < input.length(); colPos++){
 			if (tileInfo[startX][startY + colPos].newTile == true){
 				tileInfo[startX][startY + colPos].letterTile = '0';
+				tileInfo[startX][startY + colPos].cvLetterTile = "";
 				tileInfo[startX][startY + colPos].newTile = false;
 			}
 		}
@@ -235,9 +270,49 @@ int removeTiles(int startX, int startY, std::string input, bool hori){
 		for (int rowPos = 0; rowPos < input.length(); rowPos++){
 			if (tileInfo[startX + rowPos][startY].newTile == true){
 				tileInfo[startX + rowPos][startY].letterTile = '0';
+				tileInfo[startX + rowPos][startY].cvLetterTile = "";
 				tileInfo[startX + rowPos][startY].newTile = false;
 			}
 		}
 	}
-	return(1);
+}
+
+std::vector<std::pair<int,int>> tileAnalyzer(cv::Mat imageSubtracted){
+
+	//TODO:Find the tiles that contains changes (foreground)
+	//NOTE: Foreground will be white (255)
+	
+	float threshold = 0.8;	//Threshold for when a location needs to be noted
+
+	std::vector<std::pair<int,int>> tileLoc;
+
+	for (int rows = 0; rows < 15; rows++){
+		for (int cols = 0; cols < 15; cols++){
+			int pixelsCounter = 0;
+			int totalPixelsinStruct = tileInfo[rows][cols].w * tileInfo[rows][cols].h;	//NOTE: Maybe move this out of the loops scope
+			for (int tileRows = tileInfo[rows][cols].x; tileRows > tileInfo[rows][cols].x + tileInfo[rows][cols].w; tileRows++){
+				for (int tileCols = tileInfo[rows][cols].y; tileCols > tileInfo[rows][cols].y + tileInfo[rows][cols].h; tileCols++){
+					if ((imageSubtracted.at<char>(tileRows, tileCols) == 255)){
+						pixelsCounter++;
+					}
+				}	//tile cols
+			}	//tile rows
+			if (((float)pixelsCounter / (float)totalPixelsinStruct) > threshold){
+				tileLoc.push_back(std::make_pair(rows, cols));
+			}
+		}	//Cols on image
+	}	//Rows on image
+
+	return(tileLoc);
+
+}
+
+std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc){
+
+	//TODO: Send tileStruct region to letter recognition
+	std::string returnedWord ="";
+
+	//returnedWord.append();
+	
+	return("Hello:)");
 }
