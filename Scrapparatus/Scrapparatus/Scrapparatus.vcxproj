@@ -14,6 +14,8 @@
     <ClCompile Include="backgroundSubtraction.cpp" />
     <ClCompile Include="boardDetection.cpp" />
     <ClCompile Include="changeTurn.cpp" />
+    <ClCompile Include="ColourThres.cpp" />
+    <ClCompile Include="Dialate.cpp" />
     <ClCompile Include="histogramequalization.cpp" />
     <ClCompile Include="homography.cpp" />
     <ClCompile Include="main.cpp" />

@@ -7,6 +7,8 @@ using namespace std;
 cv::Mat histogramequalization(cv::Mat image);
 cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage, int threshold);
 cv::Mat sumFilter(cv::Mat inImage, cv::Mat outImage, int threshold);
+cv::Mat ColourThres(cv::Mat inImage);
+cv::Mat Dialate(cv::Mat inImage, int threshold);
 
 int changeTurn(int players){
 	cv::Mat frame, beforeTurn, afterTurn, temp;
@@ -48,10 +50,10 @@ int changeTurn(int players){
 			capture >> afterTurn;
 			imshow(" before", beforeTurn);
 			cout << "capture after" << endl;
+			beforeTurn = ColourThres(beforeTurn);
 			cvtColor(beforeTurn, beforeTurn, CV_BGR2GRAY);
 			cvtColor(afterTurn, afterTurn, CV_BGR2GRAY);
-		//	beforeTurn = histogramequalization(beforeTurn);
-			//afterTurn = histogramequalization(afterTurn);
+
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
@@ -84,10 +86,10 @@ int changeTurn(int players){
 			capture >> afterTurn;
 			imshow(" before", beforeTurn);
 			cout << "capture after" << endl;
+			beforeTurn = ColourThres(beforeTurn);
 			cvtColor(beforeTurn, beforeTurn, CV_BGR2GRAY);
 			cvtColor(afterTurn, afterTurn, CV_BGR2GRAY);
-			//	beforeTurn = histogramequalization(beforeTurn);
-			//afterTurn = histogramequalization(afterTurn);
+
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
@@ -120,10 +122,10 @@ int changeTurn(int players){
 			capture >> afterTurn;
 			imshow(" before", beforeTurn);
 			cout << "capture after" << endl;
+			beforeTurn = ColourThres(beforeTurn);
 			cvtColor(beforeTurn, beforeTurn, CV_BGR2GRAY);
 			cvtColor(afterTurn, afterTurn, CV_BGR2GRAY);
-			//	beforeTurn = histogramequalization(beforeTurn);
-			//afterTurn = histogramequalization(afterTurn);
+
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
@@ -156,10 +158,10 @@ int changeTurn(int players){
 			capture >> afterTurn;
 			imshow(" before", beforeTurn);
 			cout << "capture after" << endl;
+			beforeTurn = ColourThres(beforeTurn);
 			cvtColor(beforeTurn, beforeTurn, CV_BGR2GRAY);
 			cvtColor(afterTurn, afterTurn, CV_BGR2GRAY);
-			//	beforeTurn = histogramequalization(beforeTurn);
-			//afterTurn = histogramequalization(afterTurn);
+
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
