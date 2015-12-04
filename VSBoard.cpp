@@ -1,4 +1,6 @@
 #include <iostream>
+#include <utility>
+#include <tuple>
 #include <string>
 #include <vector>
 #include "opencv2\core\core.hpp"
@@ -7,14 +9,22 @@
 
 /*NOTE: STUFF THAT NEEDS DOING;
 
-	-Incorporate background subtraction
-	-Tile analyzer for new tiles on the board
+	-Incorporate background subtraction (Kinda done)
+	-Tile analyzer for new tiles on the board (Also kinda done, needs testing)
 	-Cropper for letter analyzer
 
 */
 
-float tempCols;
-float tempRows;
+int width = 400;
+int height = 400;
+
+cv::Mat image(width, height, CV_8UC1, cv::Scalar(0));	//Stand in for input image
+cv::Mat imageSubtracted(width, height, CV_8UC1, cv::Scalar(255));	//Stand in for subtracted image
+
+
+static float xOffset = 6.5; //% offset on the scrabble board from the edge to the playing field on x-axis(Assume upright board)
+static float tempCols = (image.cols) / 15;
+static float tempRows = (image.rows) / 15;
 
 //Structs array used for initialization
 struct tileStruct {
@@ -31,11 +41,7 @@ struct tileStruct {
 /*NOTE: REMEMBER TO REMOVE MAIN!*/
 int main(){
 
-	int width = 400;
-	int height = 400;
 
-	cv::Mat image(width, height, CV_8UC1, cv::Scalar(0));	//Stand in for input image
-	cv::Mat imageSubtracted(width, height, CV_8UC1, cv::Scalar(0));	//Stand in for subtracted image
 		
 	void VSBoard(cv::Mat image, cv::Mat imageSubtracted);
 	VSBoard(image, imageSubtracted);
@@ -53,9 +59,8 @@ void VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 	void removeTiles(int startX, int startY, std::string input, bool hori);
 	std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted);
 	std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc);
+	std::string letterRecognition(cv::Mat imageSlice);
 
-
-	//int pointCounter(std::string input, std::vector<int> premiumTiles, bool allTiles);
 
 	//Values used by the pointCounter()
 	int boardValues[15][15] =
@@ -77,9 +82,7 @@ void VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 		{ 5, 1, 1, 2, 1, 1, 1, 5, 1, 1, 1, 2, 1, 1, 5 }		//O
 	};
 
-	static float xOffset = 6.5; //% offset on the scrabble board from the edge to the playing field on x-axis(Assume upright board)
-	static float tempCols = (image.cols) / 15;
-	static float tempRows = (image.rows) / 15;
+
 
 	//Variables used for input
 	std::string input = "";
@@ -110,6 +113,7 @@ void VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 			}
 		}
 		imshow("Image", image);
+		imshow("subtracted", imageSubtracted);
 		cv::waitKey(30);
 		/*----TESTING STUFF END!-----*/
 
@@ -282,21 +286,19 @@ std::vector<std::pair<int,int>> tileAnalyzer(cv::Mat imageSubtracted){
 	//TODO:Find the tiles that contains changes (foreground)
 	//NOTE: Foreground will be white (255)
 	
-<<<<<<< HEAD
+
 	float threshold = 0.8;	//Threshold for when a location needs to be noted
-=======
-	float threshold = 0.8;	//Threshold for when a a location is noted down
->>>>>>> VSBoard
+
 
 	std::vector<std::pair<int,int>> tileLoc;
+	int totalPixelsinStruct = tileInfo[0][0].w * tileInfo[0][0].h;
 
 	for (int rows = 0; rows < 15; rows++){
 		for (int cols = 0; cols < 15; cols++){
 			int pixelsCounter = 0;
-			int totalPixelsinStruct = tileInfo[rows][cols].w * tileInfo[rows][cols].h;	//NOTE: Maybe move this out of the loops scope
-			for (int tileRows = tileInfo[rows][cols].x; tileRows > tileInfo[rows][cols].x + tileInfo[rows][cols].w; tileRows++){
-				for (int tileCols = tileInfo[rows][cols].y; tileCols > tileInfo[rows][cols].y + tileInfo[rows][cols].h; tileCols++){
-					if ((imageSubtracted.at<char>(tileRows, tileCols) == 255)){
+			for (int tileRows = tileInfo[rows][cols].x; tileRows < tileInfo[rows][cols].x + tileInfo[rows][cols].w; tileRows++){
+				for (int tileCols = tileInfo[rows][cols].y; tileCols < tileInfo[rows][cols].y + tileInfo[rows][cols].h; tileCols++){
+					if ((imageSubtracted.at<uchar>(tileRows, tileCols) == 255)){
 						pixelsCounter++;
 					}
 				}	//tile cols
@@ -313,14 +315,21 @@ std::vector<std::pair<int,int>> tileAnalyzer(cv::Mat imageSubtracted){
 
 std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc){
 
-	//TODO: Send tileStruct region to letter recognition
-<<<<<<< HEAD
-	std::string returnedWord ="";
+	//Forward declaration
+	std::string letterRecognition(cv::Mat imageSlice);
+	cv::Mat imageSlice;
+	cv::Mat imageROI;
+	std::string sWord = "";
 
-	//returnedWord.append();
-=======
+	for (int i = 0; i < tileLoc.size(); i++){
+		int x = tileInfo[tileLoc[i].first][tileLoc[i].second].x;
+		int y = tileInfo[tileLoc[i].first][tileLoc[i].second].y;
+		int w = tileInfo[tileLoc[i].first][tileLoc[i].second].w;
+		int h = tileInfo[tileLoc[i].first][tileLoc[i].second].h;
+		imageROI = image(cv::Rect(x, y, w, h));
+		imageROI.copyTo(imageSlice);
+		sWord.append(letterRecognition(imageSlice));
+	}
 
->>>>>>> VSBoard
-	
-	return("Hello:)");
+	return(sWord);
 }
