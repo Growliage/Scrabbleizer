@@ -41,7 +41,9 @@ int changeTurn(int players){
 			cout << "P1's turn.\n"; //Shows whose turn it is
 			capture >> beforeTurn;
 			capture >> beforeTurn;
+
 			waitKey(0);
+
 			capture >> afterTurn;
 			capture >> afterTurn;
 			imshow(" before", beforeTurn);
