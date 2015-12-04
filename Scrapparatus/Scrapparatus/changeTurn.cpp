@@ -7,6 +7,8 @@ using namespace std;
 cv::Mat histogramequalization(cv::Mat image);
 cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage, int threshold);
 cv::Mat sumFilter(cv::Mat inImage, cv::Mat outImage, int threshold);
+cv::Mat ColourThres(cv::Mat inImage);
+cv::Mat Dialate(cv::Mat inImage, int threshold);
 
 int changeTurn(int players){
 	cv::Mat frame, beforeTurn, afterTurn, temp;
@@ -16,8 +18,8 @@ int changeTurn(int players){
 	int nmbOfPlayers = players;
 	int turn = 0; //Used for checking whose turn it is
 	double key = 0; //Used to check what key has been pressed by the user
-	int Threshold = 80;
-	int sumThreshold = 675;
+	int Threshold = 30;
+	int sumThreshold = 1020;
 
 	cout << nmbOfPlayers << " playing.\n";
 	waitKey(0); //to make sure that p1 has played a word before it starts
@@ -41,15 +43,17 @@ int changeTurn(int players){
 			cout << "P1's turn.\n"; //Shows whose turn it is
 			capture >> beforeTurn;
 			capture >> beforeTurn;
+
 			waitKey(0);
+
 			capture >> afterTurn;
 			capture >> afterTurn;
 			imshow(" before", beforeTurn);
 			cout << "capture after" << endl;
+			beforeTurn = ColourThres(beforeTurn);
 			cvtColor(beforeTurn, beforeTurn, CV_BGR2GRAY);
 			cvtColor(afterTurn, afterTurn, CV_BGR2GRAY);
-			beforeTurn = histogramequalization(beforeTurn);
-			afterTurn = histogramequalization(afterTurn);
+
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
@@ -77,21 +81,21 @@ int changeTurn(int players){
 			capture >> beforeTurn;
 
 			waitKey(0);
-			capture >> afterTurn;
-			capture >> afterTurn;
 
+			capture >> afterTurn;
+			capture >> afterTurn;
 			imshow(" before", beforeTurn);
 			cout << "capture after" << endl;
+			beforeTurn = ColourThres(beforeTurn);
 			cvtColor(beforeTurn, beforeTurn, CV_BGR2GRAY);
 			cvtColor(afterTurn, afterTurn, CV_BGR2GRAY);
-			beforeTurn = histogramequalization(beforeTurn);
-			afterTurn = histogramequalization(afterTurn);
+
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
 
-			imshow("sumThreshold", outImage);
 			imshow("letters", temp);
+			imshow("sumThreshold", outImage);
 			imshow("afterTurn", afterTurn);
 
 			key = waitKey(0);
@@ -113,18 +117,21 @@ int changeTurn(int players){
 			capture >> beforeTurn;
 
 			waitKey(0);
-			capture >> afterTurn;
-			capture >> afterTurn;
 
+			capture >> afterTurn;
+			capture >> afterTurn;
 			imshow(" before", beforeTurn);
 			cout << "capture after" << endl;
+			beforeTurn = ColourThres(beforeTurn);
 			cvtColor(beforeTurn, beforeTurn, CV_BGR2GRAY);
 			cvtColor(afterTurn, afterTurn, CV_BGR2GRAY);
-			beforeTurn = histogramequalization(beforeTurn);
-			afterTurn = histogramequalization(afterTurn);
+
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
+			cv::Mat outImage = temp.clone();
+			sumFilter(temp, outImage, sumThreshold);
 
 			imshow("letters", temp);
+			imshow("sumThreshold", outImage);
 			imshow("afterTurn", afterTurn);
 
 			key = waitKey(0);
@@ -146,18 +153,21 @@ int changeTurn(int players){
 			capture >> beforeTurn;
 
 			waitKey(0);
-			capture >> afterTurn;
-			capture >> afterTurn;
 
+			capture >> afterTurn;
+			capture >> afterTurn;
 			imshow(" before", beforeTurn);
 			cout << "capture after" << endl;
+			beforeTurn = ColourThres(beforeTurn);
 			cvtColor(beforeTurn, beforeTurn, CV_BGR2GRAY);
 			cvtColor(afterTurn, afterTurn, CV_BGR2GRAY);
-			beforeTurn = histogramequalization(beforeTurn);
-			afterTurn = histogramequalization(afterTurn);
+
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
+			cv::Mat outImage = temp.clone();
+			sumFilter(temp, outImage, sumThreshold);
 
 			imshow("letters", temp);
+			imshow("sumThreshold", outImage);
 			imshow("afterTurn", afterTurn);
 
 			key = waitKey(0);
