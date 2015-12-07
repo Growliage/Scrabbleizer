@@ -9,7 +9,7 @@
 //all the functions in the program
 cv::Mat resizeImage(cv::Mat image);
 cv::Mat removeNoise(cv::Mat image);
-int compareHistograms(cv::Mat image, int w);
+int compareHistograms(cv::Mat image);
 std::string letterRecognition(cv::Mat image);
 cv::Mat cropImage(cv::Mat image);
 
