@@ -1,4 +1,3 @@
-
 #include "opencv2/opencv.hpp"
 #include <opencv2/highgui/highgui.hpp>
 #include <fstream>
@@ -8,7 +7,7 @@
 
 
 /*DEBUG*/
-bool loadLib = true; 
+bool loadLib = false; 
 /*Set to true to load the library files. 
 Loading takes a fucking long time, so turn it off if you don't need it*/
 
@@ -18,11 +17,11 @@ std::vector<std::pair<int, int>>boardDetection(cv::Mat image);
 cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage, int threshold);
 double homography(int,int,int,int,int,int,int,int, cv::Point topLeft, cv::Point bottomRight);
 cv::Point2d homog(int x, int y); // call to find corrospoding points in perfect image
-int changeTurn(int players);
+int changeTurn(int players, int x1, int y1,int x2,int y2,int x3,int y3,int x4,int y4);
 
 int main(int, char)
 {
-
+	int x1, y1, x2, y2, x3, y3, x4, y4;
 	if (loadLib == true){
 		
 		//Load dictionary!
@@ -195,19 +194,21 @@ int main(int, char)
 			std::cout << "x = " << x << " y = " << y << std::endl;
 		}
 
-		int x1 = scrabbleBoard[0].first;
-		int y1 = scrabbleBoard[0].second;
-		int x2 = scrabbleBoard[1].first;
-		int y2 = scrabbleBoard[1].second;
-		int x3 = scrabbleBoard[2].first;
-		int y3 = scrabbleBoard[2].second;
-		int x4 = scrabbleBoard[3].first;
-		int y4 = scrabbleBoard[3].second;
+		x1 = scrabbleBoard[0].first;
+		y1 = scrabbleBoard[0].second;
+		x2 = scrabbleBoard[1].first;
+		y2 = scrabbleBoard[1].second;
+		x3 = scrabbleBoard[2].first;
+		y3 = scrabbleBoard[2].second;
+		x4 = scrabbleBoard[3].first;
+		y4 = scrabbleBoard[3].second;
 
 
 		homography(x1, y1, x2, y2, x3, y3, x4, y4, cv::Point(120, 30), cv::Point(frame.cols - 100, frame.rows - 20));
 
 		cv::Rect boardRect(120, 30, (frame.cols - 100 - 120), (frame.rows - 20 - 30));
+
+		changeTurn(__argc, x1, y1, x2, y2, x3, y3, x4, y4);
 
 		runOnce = false;
 	} while(runOnce == true);
@@ -219,7 +220,7 @@ int main(int, char)
 		int players = 0;
 		std::cout << "Choose number of players (1-4)\n";
 		std::cin >> players;
-		(changeTurn(players));
+		(changeTurn(players, __argc, __argc, __argc, __argc, __argc, __argc, __argc, __argc));
 		//in changeTurn.cpp
 				//letter placement
 				//letter recognition
