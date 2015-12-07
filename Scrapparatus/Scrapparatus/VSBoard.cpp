@@ -41,6 +41,7 @@ int main(){
 
 int VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 
+
 	int height = image.rows;
 	int width = image.cols;
 
