@@ -139,7 +139,7 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 				hori = false;
 			}
 
-			std::cout << placeTiles(startX, startY, input, hori) << std::endl;
+			return(placeTiles(startX, startY, input, hori));
 		} 
 		else
 		{
