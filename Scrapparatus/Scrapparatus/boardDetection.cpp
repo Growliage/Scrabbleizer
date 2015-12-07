@@ -5,8 +5,8 @@
 
 # define M_PIl          3.141592653589793238462643383279502884L /* pi */
 
-//using namespace cv;
-//using namespace std;
+using namespace cv;
+using namespace std;
 
 std::vector<pair<int, int>>boardDetection(cv::Mat image)
 {

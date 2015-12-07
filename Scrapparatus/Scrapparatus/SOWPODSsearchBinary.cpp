@@ -18,11 +18,6 @@ bool SOWPODSsearch(std::string input){
 		//Set the fileName variable to the amount of letters in the word to ensure it looks in the right .txt file
 		std::string linesN = "lines" + std::to_string(input.length());
 
-		//Binary search
-		//if(std::binary_search(lines, input) {
-		//realWord = true;
-		//}
-
 		return(binarySearch(linesN, input));
 
 	}

@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="backgroundSubtraction.cpp" />
+    <ClCompile Include="binarySearch.cpp" />
     <ClCompile Include="boardDetection.cpp" />
     <ClCompile Include="changeTurn.cpp" />
     <ClCompile Include="ColourThres.cpp" />
