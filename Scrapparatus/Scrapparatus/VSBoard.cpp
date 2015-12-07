@@ -7,17 +7,10 @@
 #include "opencv2\highgui\highgui.hpp"
 #include "opencv2\imgproc\imgproc.hpp"
 
-/*NOTE: STUFF THAT NEEDS DOING;
 
-	-Incorporate background subtraction (Kinda done)
-	-Tile analyzer for new tiles on the board (Also kinda done, needs testing)
-	-Cropper for letter analyzer
-
-*/
-
+//TEST: Testing variables
 int width = 400;
 int height = 400;
-
 cv::Mat image(width, height, CV_8UC1, cv::Scalar(0));	//Stand in for input image
 cv::Mat imageSubtracted(width, height, CV_8UC1, cv::Scalar(255));	//Stand in for subtracted image
 
@@ -38,7 +31,7 @@ struct tileStruct {
 	int h = tempRows;	//Used to find the height of a single tile
 } tileInfo[15][15];
 
-/*NOTE: REMEMBER TO REMOVE MAIN!*/
+/*NOTE: REMEMBER TO REMOVE MAIN()*/
 int main(){
 
 
@@ -59,6 +52,7 @@ void VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 	std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted);
 	std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc);
 	std::string letterRecognition(cv::Mat imageSlice);
+	bool SOWPODSsearch(std::string input);
 
 
 	//Values used by the pointCounter()
@@ -82,7 +76,6 @@ void VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 	};
 
 
-
 	//Variables used for input
 	std::string input = "";
 	std::string choice = "";
@@ -92,7 +85,6 @@ void VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 	bool hori = true;
 
 	//Initialize all the structs!
-
 	for (int rows = 0; rows < 15; rows++){
 		for (int cols = 0; cols < 15; cols++){
 			tileInfo[rows][cols].tileValue = boardValues[rows][cols];
@@ -100,7 +92,7 @@ void VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 			tileInfo[rows][cols].y = cols * tempCols;
 		}
 	}
-	tileInfo[7][7].playablePos = true;	//Set the middle tile to be a place where a tile can be placed
+	tileInfo[7][7].playablePos = true;	//Set the middle tile as a playable position
 	do{
 		/*-----TESTING: DRAWS THE BOARD-----*/
 		image = cv::Mat::zeros(width, height, image.type());
@@ -116,17 +108,19 @@ void VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 		//cv::waitKey(30);
 		/*----TESTING STUFF END!-----*/
 
-		//tileAnalyzer and tileCropper should be somewhere around here
-		std::vector<std::pair<int,int>> tileLoc = tileAnalyzer(imageSubtracted);
-		std::string input = tileCropper(image, tileLoc);
+		std::vector<std::pair<int,int>> tileLoc = tileAnalyzer(imageSubtracted); //Find the coords for changes on the board
+		std::string input = tileCropper(image, tileLoc);	//Cut coords from original picture and find the letter
 
 		std::cout << "\nEnter the word to be played or press 1 to remove the last played tiles:" << std::endl;
 		std::cin >> choice;
 		if (choice != "1"){
 
-			for (int cols = 0; cols < 15; cols++){
-				for (int rows = 0; rows < 15; rows++){
-					tileInfo[rows][cols].newTile = false;
+			if (SOWPODSsearch(input) == false){
+
+				for (int cols = 0; cols < 15; cols++){
+					for (int rows = 0; rows < 15; rows++){
+						tileInfo[rows][cols].newTile = false;
+					}
 				}
 			}
 

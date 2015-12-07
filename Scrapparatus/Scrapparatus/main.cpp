@@ -7,6 +7,10 @@
 #include <thread>
 
 
+/*DEBUG*/
+bool loadLib = false; //Set to true to load the library files.
+
+
 cv::Mat histogramequalization(cv::Mat image);
 std::vector<std::pair<int, int>>boardDetection(cv::Mat image);
 cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage, int threshold);
@@ -16,117 +20,119 @@ int changeTurn(int players);
 
 int main(int, char)
 {
-	/*
-	//Load dictionary!
-	std::cout << "Loading dictionary... This may take a while";
 
-	//std::string fileName = "data/2.txt";
-	std::ifstream dict("fileName");
+	if (loadLib == true){
+		
+		//Load dictionary!
+		std::cout << "Loading dictionary... This may take a while";
+
+		std::ifstream dict("fileName");
 
 
-	//Moving the filestream into a vector
-	dict.open("data/2.txt");
-	std::vector<std::string> lines2;
-	for (std::string line; std::getline(dict, line);)
+		//Moving the filestream into a vector
+		dict.open("data/2.txt");
+		std::vector<std::string> lines2;
+		for (std::string line; std::getline(dict, line);)
 		lines2.push_back(line);
-	dict.close();
+		dict.close();
 
 
-	dict.open("data/3.txt");
-	std::vector<std::string> lines3;
-	for (std::string line; std::getline(dict, line);)
+		dict.open("data/3.txt");
+		std::vector<std::string> lines3;
+		for (std::string line; std::getline(dict, line);)
 		lines3.push_back(line);
-	dict.close();
+		dict.close();
 
 
-	dict.open("data/4.txt");
-	std::vector<std::string> lines4;
-	for (std::string line; std::getline(dict, line);)
+		dict.open("data/4.txt");
+		std::vector<std::string> lines4;
+		for (std::string line; std::getline(dict, line);)
 		lines4.push_back(line);
-	dict.close();
+		dict.close();
 
 
-	dict.open("data/5.txt");
-	std::vector<std::string> lines5;
-	for (std::string line; std::getline(dict, line);)
+		dict.open("data/5.txt");
+		std::vector<std::string> lines5;
+		for (std::string line; std::getline(dict, line);)
 		lines5.push_back(line);
-	dict.close();
+		dict.close();
 
 
-	dict.open("data/6.txt");
-	std::vector<std::string> lines6;
-	for (std::string line; std::getline(dict, line);)
+		dict.open("data/6.txt");
+		std::vector<std::string> lines6;
+		for (std::string line; std::getline(dict, line);)
 		lines6.push_back(line);
-	dict.close();
+		dict.close();
 
 
-	dict.open("data/7.txt");
-	std::vector<std::string> lines7;
-	for (std::string line; std::getline(dict, line);)
+		dict.open("data/7.txt");
+		std::vector<std::string> lines7;
+		for (std::string line; std::getline(dict, line);)
 		lines7.push_back(line);
-	dict.close();
+		dict.close();
 
 
-	dict.open("data/8.txt");
-	std::vector<std::string> lines8;
-	for (std::string line; std::getline(dict, line);)
+		dict.open("data/8.txt");
+		std::vector<std::string> lines8;
+		for (std::string line; std::getline(dict, line);)
 		lines8.push_back(line);
-	dict.close();
-	
+		dict.close();
 
-	dict.open("data/9.txt");
-	std::vector<std::string> lines9;
-	for (std::string line; std::getline(dict, line);)
+
+		dict.open("data/9.txt");
+		std::vector<std::string> lines9;
+		for (std::string line; std::getline(dict, line);)
 		lines9.push_back(line);
-	dict.close();
-	
+		dict.close();
 
-	dict.open("data/10.txt");
-	std::vector<std::string> lines10;
-	for (std::string line; std::getline(dict, line);)
+
+		dict.open("data/10.txt");
+		std::vector<std::string> lines10;
+		for (std::string line; std::getline(dict, line);)
 		lines10.push_back(line);
-	dict.close();
+		dict.close();
 
 
-	dict.open("data/11.txt");
-	std::vector<std::string> lines11;
-	for (std::string line; std::getline(dict, line);)
+		dict.open("data/11.txt");
+		std::vector<std::string> lines11;
+		for (std::string line; std::getline(dict, line);)
 		lines11.push_back(line);
-	dict.close();
+		dict.close();
 
 
-	dict.open("data/12.txt");
-	std::vector<std::string> lines12;
-	for (std::string line; std::getline(dict, line);)
+		dict.open("data/12.txt");
+		std::vector<std::string> lines12;
+		for (std::string line; std::getline(dict, line);)
 		lines12.push_back(line);
-	dict.close();
+		dict.close();
 
 
-	dict.open("data/13.txt");
-	std::vector<std::string> lines13;
-	for (std::string line; std::getline(dict, line);)
+		dict.open("data/13.txt");
+		std::vector<std::string> lines13;
+		for (std::string line; std::getline(dict, line);)
 		lines13.push_back(line);
-	dict.close();
+		dict.close();
 
 
-	dict.open("data/14.txt");
-	std::vector<std::string> lines14;
-	for (std::string line; std::getline(dict, line);)
+		dict.open("data/14.txt");
+		std::vector<std::string> lines14;
+		for (std::string line; std::getline(dict, line);)
 		lines14.push_back(line);
-	dict.close();
+		dict.close();
 
 
-	dict.open("data/15.txt");
-	std::vector<std::string> lines15;
-	for (std::string line; std::getline(dict, line);)
+		dict.open("data/15.txt");
+		std::vector<std::string> lines15;
+		for (std::string line; std::getline(dict, line);)
 		lines15.push_back(line);
-	dict.close();
-	*/
+		dict.close();
+		
 
-	std::cout << "\nDictionary has been loaded." << std::endl;
+		std::cout << "\nDictionary has been loaded." << std::endl;
+	};
 	
 	bool runOnce = true;
-	while (runOnce == true){
+	do{
 		cv::Mat frame, firstFrame, BackgSubs, startingImage;
 		cv::VideoCapture capture(1);
 		if (!capture.isOpened())
@@ -202,7 +208,7 @@ int main(int, char)
 		cv::Rect boardRect(120, 30, (frame.cols - 100 - 120), (frame.rows - 20 - 30));
 
 		runOnce = false;
-	};
+	} while(runOnce == true);
 		//cv::Mat croppedBoard = startingImage(boardRect).clone();
 		//virtual board
 		
