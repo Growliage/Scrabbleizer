@@ -8,7 +8,9 @@
 
 
 /*DEBUG*/
-bool loadLib = false; //Set to true to load the library files.
+bool loadLib = false; 
+/*Set to true to load the library files. 
+Loading takes a fucking long time, so turn it off if you don't need it*/
 
 
 cv::Mat histogramequalization(cv::Mat image);

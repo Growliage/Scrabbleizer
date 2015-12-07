@@ -2,15 +2,15 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-using namespace cv;
-using namespace std;
+//using namespace cv;
+//using namespace std;
 
 int bin = 256;
 
-void imageHistogram(Mat image, int histogram[]);
+void imageHistogram(cv::Mat image, int histogram[]);
 void cdfcalc(int histogram[], int cumuhistogram[]);
 
-cv::Mat histogramequalization(Mat image)
+cv::Mat histogramequalization(cv::Mat image)
 {
 	image = image;
 	int nPixels = image.rows * image.cols;
@@ -27,7 +27,7 @@ cv::Mat histogramequalization(Mat image)
 		equalize[i] = ((double)(cdf[i] - 1) / (nPixels - 1) * 256 - 1);
 	}
 
-	Mat eImage = image.clone();
+	cv::Mat eImage = image.clone();
 
 	for (int y = 0; y < image.rows; y++)
 		for (int x = 0; x < image.cols; x++)
@@ -43,7 +43,7 @@ cv::Mat histogramequalization(Mat image)
 	return(eImage);
 }
 
-	void imageHistogram(Mat image, int histogram[])
+	void imageHistogram(cv::Mat image, int histogram[])
 	{
 		for (int i = 0; i < 256; i++)
 		{

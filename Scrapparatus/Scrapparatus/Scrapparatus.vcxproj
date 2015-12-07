@@ -18,7 +18,9 @@
     <ClCompile Include="Dialate.cpp" />
     <ClCompile Include="histogramequalization.cpp" />
     <ClCompile Include="homography.cpp" />
+    <ClCompile Include="letterRecogition.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="pointCounter.cpp" />
     <ClCompile Include="SOWPODSsearchBinary.cpp" />
     <ClCompile Include="sumFilter.cpp" />
     <ClCompile Include="VSBoard.cpp" />
