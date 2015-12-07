@@ -9,8 +9,9 @@ cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage, int thresh
 cv::Mat sumFilter(cv::Mat inImage, cv::Mat outImage, int threshold);
 cv::Mat ColourThres(cv::Mat inImage);
 cv::Mat Dialate(cv::Mat inImage, int threshold);
+int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int y1, int y2, int x2, int x3, int y3, int x4, int y4);
 
-int changeTurn(int players){
+int changeTurn(int players, int x1, int y1, int y2, int x2, int x3, int y3, int x4, int y4){
 	cv::Mat frame, beforeTurn, afterTurn, temp;
 
 	bool endGame = false; //A whole bunch of declarations. endGame is used to check if the game is ended or not
@@ -20,7 +21,7 @@ int changeTurn(int players){
 	double key = 0; //Used to check what key has been pressed by the user
 	int Threshold = 30;
 	int sumThreshold = 1020;
-
+	int addPoints;
 	std::cout << nmbOfPlayers << " playing.\n";
 	cv::waitKey(0); //to make sure that p1 has played a word before it starts
 	while (endGame == false){
@@ -60,6 +61,7 @@ int changeTurn(int players){
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
+			addPoints = VSBoard(afterTurn, outImage, x1, y1, y2, x2, x3, y3, x4, y4);
 
 			imshow("letters", temp);
 			imshow("sumThreshold", outImage);
@@ -75,7 +77,7 @@ int changeTurn(int players){
 				cout << "Word does exist.";
 				}*/
 			}
-			points.at<int>(0) = points.at<int>(0) + counter; //add the points
+			points.at<int>(0) = points.at<int>(0) + addPoints; //add the points
 			std::cout << "P1 receives " << counter << " points.\n"; //Shows how many points the player is given
 		}
 		else if (turn == 1){
@@ -96,6 +98,7 @@ int changeTurn(int players){
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
+			addPoints = VSBoard(afterTurn, outImage, __argc, __argc, __argc, __argc, __argc, __argc, __argc, __argc);
 
 			imshow("letters", temp);
 			imshow("sumThreshold", outImage);
@@ -111,7 +114,7 @@ int changeTurn(int players){
 				cout << "Word does exist.";
 				}*/
 			}
-			points.at<int>(1) = points.at<int>(1) + counter;
+			points.at<int>(1) = points.at<int>(1) + addPoints;
 			std::cout << "P2 receives " << counter << " points.\n";
 		}
 		else if (turn == 2){
@@ -132,6 +135,7 @@ int changeTurn(int players){
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
+			addPoints = VSBoard(afterTurn, outImage, __argc, __argc, __argc, __argc, __argc, __argc, __argc, __argc);
 
 			imshow("letters", temp);
 			imshow("sumThreshold", outImage);
@@ -147,7 +151,7 @@ int changeTurn(int players){
 				cout << "Word does exist.";
 				}*/
 			}
-			points.at<int>(2) = points.at<int>(2) + counter;
+			points.at<int>(2) = points.at<int>(2) + addPoints;
 			std::cout << "P3 receives " << counter << " points.\n";
 		}
 		else {
@@ -168,6 +172,7 @@ int changeTurn(int players){
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
+			addPoints = VSBoard(afterTurn, outImage, __argc, __argc, __argc, __argc, __argc, __argc, __argc, __argc);
 
 			imshow("letters", temp);
 			imshow("sumThreshold", outImage);
@@ -183,7 +188,7 @@ int changeTurn(int players){
 				cout << "Word does exist.";
 				}*/
 			}
-			points.at<int>(3) = points.at<int>(3) + counter;
+			points.at<int>(3) = points.at<int>(3) + addPoints;
 			std::cout << "P4 receives " << counter << " points.\n";
 		}
 		turn++; //Count the turn up to signify it's a new player's turn
