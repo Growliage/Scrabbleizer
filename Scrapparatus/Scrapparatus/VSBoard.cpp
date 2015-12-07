@@ -106,7 +106,7 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 		std::string input = tileCropper(image, tileLoc);	//Cut coords from original picture and find the letter
 
 		
-		std::cout << "\nEnter the word to be played or press 1 to remove the last played tiles:" << std::endl;
+		std::cout << "\nEnter 1 to contest the word:" << std::endl;
 		std::cin >> choice;
 		if (choice != "1"){
 
@@ -133,7 +133,8 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 				hori = false;
 			}
 
-			return(placeTiles(startX, startY, input, hori));
+			int points = (placeTiles(startX, startY, input, hori));
+			return(points);
 		} 
 		else
 		{
