@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <thread>
 
 
 cv::Mat histogramequalization(cv::Mat image);
@@ -123,7 +124,9 @@ int main(int, char)
 	*/
 
 	std::cout << "\nDictionary has been loaded." << std::endl;
-
+	
+	bool runOnce = true;
+	while (runOnce == true){
 		cv::Mat frame, firstFrame, BackgSubs, startingImage;
 		cv::VideoCapture capture(1);
 		if (!capture.isOpened())
@@ -135,7 +138,7 @@ int main(int, char)
 		for (;;)
 		{
 			capture >> frame; // get a new frame from camera
-			rectangle(frame, cvPoint(120,30), cvPoint(frame.cols-100,frame.rows-20), CV_RGB(50,255,0), 2);
+			rectangle(frame, cvPoint(120, 30), cvPoint(frame.cols - 100, frame.rows - 20), CV_RGB(50, 255, 0), 2);
 			imshow("image", frame);
 			if (cv::waitKey(30) >= 0)
 				break;
@@ -150,7 +153,7 @@ int main(int, char)
 		cv::Mat equalizedImage2 = histogramequalization(startingImage);
 
 		cv::Mat backGroundSubtraction = BackgroundSubtract(equalizedImage1, equalizedImage2, 70);
-		
+
 		for (int i = 0; i < backGroundSubtraction.rows; i++){ //y
 			for (int j = 0; j < backGroundSubtraction.cols; j++){ //x
 				if (j < 100 || j > backGroundSubtraction.cols - 80 || i < 20 || i > backGroundSubtraction.rows - 10)
@@ -194,9 +197,12 @@ int main(int, char)
 		int y4 = scrabbleBoard[3].second;
 
 
-		homography(x1,y1,x2,y2,x3,y3,x4,y4, cv::Point(120, 30), cv::Point(frame.cols - 100, frame.rows - 20));
-		
-		cv::Rect boardRect(120,30,(frame.cols-100-120),(frame.rows-20-30));
+		homography(x1, y1, x2, y2, x3, y3, x4, y4, cv::Point(120, 30), cv::Point(frame.cols - 100, frame.rows - 20));
+
+		cv::Rect boardRect(120, 30, (frame.cols - 100 - 120), (frame.rows - 20 - 30));
+
+		runOnce = false;
+	};
 		//cv::Mat croppedBoard = startingImage(boardRect).clone();
 		//virtual board
 		
@@ -205,7 +211,7 @@ int main(int, char)
 		int players = 0;
 		std::cout << "Choose number of players (1-4)\n";
 		std::cin >> players;
-		changeTurn(players);
+		std::thread first(changeTurn(players));
 		//in changeTurn.cpp
 				//letter placement
 				//letter recognition

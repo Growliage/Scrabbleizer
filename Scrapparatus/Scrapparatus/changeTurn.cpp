@@ -1,4 +1,5 @@
 #include "opencv2/opencv.hpp"
+#include <thread>
 
 
 using namespace cv;
@@ -38,6 +39,9 @@ int changeTurn(int players){
 		}
 		cout << "capture before" << endl;
 		*/
+
+		//std::thread second(VSBoard(image, imageSubtracted)); //Pass a regular and an image subtracted image
+
 		int counter = rand() % 100; //This is is just a placeholder for the point counting class/program
 		if (turn == 0){ //Checking for whose turn it is
 			cout << "P1's turn.\n"; //Shows whose turn it is
