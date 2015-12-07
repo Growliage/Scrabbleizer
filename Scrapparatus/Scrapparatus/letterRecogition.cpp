@@ -11,6 +11,7 @@ cv::Mat resizeImage(cv::Mat image);
 cv::Mat removeNoise(cv::Mat image);
 int compareHistograms(cv::Mat image, int w);
 std::string boundingBox(cv::Mat image);
+cv::Mat cropImage(cv::Mat image);
 
 int main(int, char){
 	cv::Mat srcImg = cv::imread("C:/LetterRecognition/MEG.jpg", 0);
