@@ -31,14 +31,6 @@ struct tileStruct {
 	int h = tempRows;	//Used to find the height of a single tile
 } tileInfo[15][15];
 
-/*NOTE: REMEMBER TO REMOVE MAIN()*/
-int main(){
-
-
-	void VSBoard(cv::Mat image, cv::Mat imageSubtracted);
-	VSBoard(image, imageSubtracted);
-}
-
 int VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 
 

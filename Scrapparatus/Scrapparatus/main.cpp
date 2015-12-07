@@ -1,14 +1,14 @@
+
 #include "opencv2/opencv.hpp"
 #include <opencv2/highgui/highgui.hpp>
 #include <fstream>
 #include <string>
 #include <iostream>
 #include <vector>
-#include <thread>
 
 
 /*DEBUG*/
-bool loadLib = false; 
+bool loadLib = true; 
 /*Set to true to load the library files. 
 Loading takes a fucking long time, so turn it off if you don't need it*/
 
@@ -219,7 +219,7 @@ int main(int, char)
 		int players = 0;
 		std::cout << "Choose number of players (1-4)\n";
 		std::cin >> players;
-		std::thread first(changeTurn(players));
+		(changeTurn(players));
 		//in changeTurn.cpp
 				//letter placement
 				//letter recognition
