@@ -9,15 +9,10 @@
 
 
 //TEST: Testing variables
-int width = 400;
-int height = 400;
-cv::Mat image(width, height, CV_8UC1, cv::Scalar(0));	//Stand in for input image
-cv::Mat imageSubtracted(width, height, CV_8UC1, cv::Scalar(255));	//Stand in for subtracted image
-
-
-static float xOffset = 6.5; //% offset on the scrabble board from the edge to the playing field on x-axis(Assume upright board)
-static float tempCols = (image.cols) / 15;
-static float tempRows = (image.rows) / 15;
+//int width = 400;
+//int height = 400;
+//cv::Mat image(width, height, CV_8UC1, cv::Scalar(0));	//Stand in for input image
+//cv::Mat imageSubtracted(width, height, CV_8UC1, cv::Scalar(255));	//Stand in for subtracted image
 
 //Structs array used for initialization
 struct tileStruct {
@@ -31,11 +26,14 @@ struct tileStruct {
 	int h = tempRows;	//Used to find the height of a single tile
 } tileInfo[15][15];
 
-int VSBoard(cv::Mat image, cv::Mat imageSubtracted){
+int VSBoard(cv::Mat image, cv::Mat imageSubtracted, , int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4){
 
+	static float xOffset = 6.5; //% offset on the scrabble board from the edge to the playing field on x-axis(Assume upright board)
+	static float tempCols = (image.cols) / 15;
+	static float tempRows = (image.rows) / 15;
 
-	int height = image.rows;
-	int width = image.cols;
+	int height = y3 - y1;
+	int width = x2 - x1;
 
 
 	//Forward declarations
@@ -73,8 +71,8 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 	//Variables used for input
 	std::string input = "";
 	std::string choice = "";
-	int startX = 0;
-	int startY = 0;
+	int startX = 0;	//Struct coords
+	int startY = 0;	//Struct coords
 	std::string temp = "";
 	bool hori = true;
 
@@ -82,8 +80,8 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 	for (int rows = 0; rows < 15; rows++){
 		for (int cols = 0; cols < 15; cols++){
 			tileInfo[rows][cols].tileValue = boardValues[rows][cols];
-			tileInfo[rows][cols].x = rows * tempRows;
-			tileInfo[rows][cols].y = cols * tempCols;
+			tileInfo[rows][cols].x = tileInfo[rows][cols].x + x1;	//rows * tempRows;
+			tileInfo[rows][cols].y = tileInfo[rows][cols].y + y1;	 //cols * tempCols;
 		}
 	}
 	tileInfo[7][7].playablePos = true;	//Set the middle tile as a playable position
