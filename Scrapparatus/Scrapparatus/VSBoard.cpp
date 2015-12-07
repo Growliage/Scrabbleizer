@@ -54,6 +54,7 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 	std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc);
 	std::string letterRecognition(cv::Mat imageSlice);
 	bool SOWPODSsearch(std::string input);
+	int pointCounter(std::string input, std::vector<int> premiumTiles, bool allTiles);
 
 
 	//Values used by the pointCounter()
