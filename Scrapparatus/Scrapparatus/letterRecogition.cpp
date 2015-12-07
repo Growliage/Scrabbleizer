@@ -10,17 +10,27 @@
 cv::Mat resizeImage(cv::Mat image);
 cv::Mat removeNoise(cv::Mat image);
 int compareHistograms(cv::Mat image, int w);
-std::string boundingBox(cv::Mat image);
+std::string letterRecognition(cv::Mat image);
 cv::Mat cropImage(cv::Mat image);
 
-int main(int, char){
-	cv::Mat srcImg = cv::imread("C:/LetterRecognition/MEG.jpg", 0);
-	imshow("letter", srcImg);
-	//***************************Threshold & scale image*********************
-	std::string letter = boundingBox(srcImg);
-	std::cout << letter << " was found";
-	cv::waitKey(0);
-	return 0;
+std::string letterRecognition(cv::Mat image){
+	std::string letters[27] = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "*" };
+	cv::Mat imgDivide = image.clone();
+	imgDivide = removeNoise(image);
+	imgDivide = resizeImage(imgDivide);
+	int letterInt = compareHistograms(imgDivide);
+	//make sure its an M or an N
+	if (letterInt == 13 && image.cols >= 55){
+		return "M";
+	}
+	else if (letterInt == 12 && image.cols < 55){
+		return "N";
+	}
+	if (letterInt == 1337)
+	{
+		return "Error";
+	}
+	return letters[letterInt];
 }
 cv::Mat resizeImage(cv::Mat image)
 {
@@ -163,25 +173,6 @@ int compareHistograms(cv::Mat image){
 	}
 	std::cout << "value: " << lettervalue << ", letter: " << letters[letternumber] << std::endl;
 	return letternumber;
-}
-std::string boundingBox(cv::Mat image){
-	std::string letters[27] = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "*" };
-	cv::Mat imgDivide = image.clone();
-	imgDivide = removeNoise(image);
-	imgDivide = resizeImage(imgDivide);
-	int letterInt = compareHistograms(imgDivide);
-	//make sure its an M or an N
-	if (letterInt == 13 && image.cols >= 55){
-		return "M";
-	}
-	else if (letterInt == 12 && image.cols < 55){
-		return "N";
-	}
-	if (letterInt == 1337)
-	{
-		return "Error";
-	}
-	return letters[letterInt];
 }
 cv::Mat cropImage(cv::Mat image)
 {
