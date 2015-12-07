@@ -39,7 +39,7 @@ int main(){
 	VSBoard(image, imageSubtracted);
 }
 
-void VSBoard(cv::Mat image, cv::Mat imageSubtracted){
+int VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 
 	int height = image.rows;
 	int width = image.cols;
@@ -94,7 +94,7 @@ void VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 	}
 	tileInfo[7][7].playablePos = true;	//Set the middle tile as a playable position
 	do{
-		/*-----TESTING: DRAWS THE BOARD-----*/
+		/*-----TEST: DRAWS THE BOARD-----*/
 		image = cv::Mat::zeros(width, height, image.type());
 		for (int cols = 0; cols < 15; cols++){
 			for (int rows = 0; rows < 15; rows++){
@@ -111,16 +111,14 @@ void VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 		std::vector<std::pair<int,int>> tileLoc = tileAnalyzer(imageSubtracted); //Find the coords for changes on the board
 		std::string input = tileCropper(image, tileLoc);	//Cut coords from original picture and find the letter
 
+		
 		std::cout << "\nEnter the word to be played or press 1 to remove the last played tiles:" << std::endl;
 		std::cin >> choice;
 		if (choice != "1"){
 
-			if (SOWPODSsearch(input) == false){
-
-				for (int cols = 0; cols < 15; cols++){
-					for (int rows = 0; rows < 15; rows++){
-						tileInfo[rows][cols].newTile = false;
-					}
+			for (int cols = 0; cols < 15; cols++){
+				for (int rows = 0; rows < 15; rows++){
+					tileInfo[rows][cols].newTile = false;
 				}
 			}
 
@@ -145,7 +143,13 @@ void VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 		} 
 		else
 		{
-			removeTiles(startX, startY, input, hori);
+			if (SOWPODSsearch(input) == false){
+				removeTiles(startX, startY, input, hori);
+				std::cout << "\nThat word does not exist. Please remove the tiles!";
+			}
+			else {
+				std::cout << "\nThat is a real word.";
+			}
 		}
 
 	} while (true);
@@ -278,11 +282,8 @@ void removeTiles(int startX, int startY, std::string input, bool hori){
 
 std::vector<std::pair<int,int>> tileAnalyzer(cv::Mat imageSubtracted){
 
-	//TODO:Find the tiles that contains changes (foreground)
-	//NOTE: Foreground will be white (255)
-	
 
-	float threshold = 0.8;	//Threshold for when a location needs to be noted
+	float threshold = 0.5;	//Threshold for when a location needs to be noted
 
 
 	std::vector<std::pair<int,int>> tileLoc;
@@ -325,7 +326,7 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 		imageROI = image(cv::Rect(x, y, w, h));
 		imageROI.copyTo(imageSlice);
 		imshow("slice", imageSlice);
-		cv::waitKey(0);
+		//cv::waitKey(0);
 		sWord.append(letterRecognition(imageSlice));
 	}
 

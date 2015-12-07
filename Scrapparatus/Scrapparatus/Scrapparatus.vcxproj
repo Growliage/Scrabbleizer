@@ -19,6 +19,7 @@
     <ClCompile Include="histogramequalization.cpp" />
     <ClCompile Include="homography.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SOWPODSsearchBinary.cpp" />
     <ClCompile Include="sumFilter.cpp" />
     <ClCompile Include="VSBoard.cpp" />
   </ItemGroup>
