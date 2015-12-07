@@ -22,15 +22,22 @@ struct tileStruct {
 	char letterTile = '0';	//The letter found at the spcified coordinated
 	int tileValue;	//What kind of (premium) tile is it. Gotten from boardValues
 	int x, y;	//Overlay rectanlges position on the board
-	int w = tempCols;	//Used to find the width on a single tile
-	int h = tempRows;	//Used to find the height of a single tile
+	int w = __argc;	//Used to find the width on a single tile
+	int h = __argc;	//Used to find the height of a single tile
 } tileInfo[15][15];
 
-int VSBoard(cv::Mat image, cv::Mat imageSubtracted, , int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4){
+int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4){
 
 	static float xOffset = 6.5; //% offset on the scrabble board from the edge to the playing field on x-axis(Assume upright board)
 	static float tempCols = (image.cols) / 15;
 	static float tempRows = (image.rows) / 15;
+
+	for (int i = 0; i < 15; i++){
+		for (int j = 0; j < 15; i++){
+			tileInfo[i][j].w = tempRows;
+			tileInfo[i][j].h = tempCols;
+		}
+	}
 
 	int height = y3 - y1;
 	int width = x2 - x1;
