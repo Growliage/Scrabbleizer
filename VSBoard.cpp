@@ -7,6 +7,7 @@
 #include "opencv2\highgui\highgui.hpp"
 #include "opencv2\imgproc\imgproc.hpp"
 
+
 /*NOTE: STUFF THAT NEEDS DOING;
 
 	-Incorporate background subtraction (Kinda done)
@@ -19,7 +20,9 @@ int width = 400;
 int height = 400;
 
 cv::Mat image(width, height, CV_8UC1, cv::Scalar(0));	//Stand in for input image
-cv::Mat imageSubtracted(width, height, CV_8UC1, cv::Scalar(255));	//Stand in for subtracted image
+//cv::Mat imageSubtracted(width, height, CV_8UC1, cv::Scalar(255));	//Stand in for subtracted image
+cv::Mat imageSubtracted = cv::imread("C:/imageSubtracted.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+
 
 
 static float xOffset = 6.5; //% offset on the scrabble board from the edge to the playing field on x-axis(Assume upright board)
@@ -288,7 +291,7 @@ std::vector<std::pair<int,int>> tileAnalyzer(cv::Mat imageSubtracted){
 	//NOTE: Foreground will be white (255)
 	
 
-	float threshold = 0.8;	//Threshold for when a location needs to be noted
+	float threshold = 0.1;	//Threshold for when a location needs to be noted
 
 
 	std::vector<std::pair<int,int>> tileLoc;
@@ -296,17 +299,22 @@ std::vector<std::pair<int,int>> tileAnalyzer(cv::Mat imageSubtracted){
 
 	for (int rows = 0; rows < 15; rows++){
 		for (int cols = 0; cols < 15; cols++){
+
+			
 			int pixelsCounter = 0;
 			for (int tileRows = tileInfo[rows][cols].x; tileRows < tileInfo[rows][cols].x + tileInfo[rows][cols].w; tileRows++){
 				for (int tileCols = tileInfo[rows][cols].y; tileCols < tileInfo[rows][cols].y + tileInfo[rows][cols].h; tileCols++){
-					if ((imageSubtracted.at<uchar>(tileRows, tileCols) == 255)){
+					
+					if ((imageSubtracted.at<unsigned char>(tileRows, tileCols) > 128)){
 						pixelsCounter++;
 					}
 				}	//tile cols
 			}	//tile rows
+
 			if (((float)pixelsCounter / (float)totalPixelsinStruct) > threshold){
 				tileLoc.push_back(std::make_pair(rows, cols));
-			}
+				}
+			
 		}	//Cols on image
 	}	//Rows on image
 
@@ -322,18 +330,20 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 	cv::Mat imageSlice;
 	cv::Mat imageROI;
 	std::string sWord = "";
+	imshow("Full image", image);
 
 	for (int i = 0; i < tileLoc.size(); i++){
 		int x = tileInfo[tileLoc[i].first][tileLoc[i].second].x;
 		int y = tileInfo[tileLoc[i].first][tileLoc[i].second].y;
 		int w = tileInfo[tileLoc[i].first][tileLoc[i].second].w;
 		int h = tileInfo[tileLoc[i].first][tileLoc[i].second].h;
-		imageROI = image(cv::Rect(x, y, w, h));
+		imageROI = imageSubtracted(cv::Rect(y, x, w, h));
 		imageROI.copyTo(imageSlice);
 		imshow("slice", imageSlice);
 		cv::waitKey(0);
-		sWord.append(letterRecognition(imageSlice));
+		//sWord.append(letterRecognition(imageSlice));
 	}
 
-	return(sWord);
+	//return(sWord);
+	return("word");
 }
