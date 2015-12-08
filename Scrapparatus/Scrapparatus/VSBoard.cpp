@@ -34,7 +34,7 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int y1, int x2, int 
 	int width = x2 - x1;
 
 	for (int i = 0; i < 15; i++){
-		for (int j = 0; j < 15; i++){
+		for (int j = 0; j < 15; j++){
 			tileInfo[i][j].w = height / 15;
 			tileInfo[i][j].h = width / 15;
 		}
@@ -79,7 +79,7 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int y1, int x2, int 
 	bool hori = true;
 
 
-	tileInfo[0][0].x = x1;
+	tileInfo[0][0].x = x1 + (width/xOffset);
 	tileInfo[0][0].y = y1;
 
 	/*Initialize all the structs!*/
@@ -302,7 +302,7 @@ std::vector<std::pair<int,int>> tileAnalyzer(cv::Mat imageSubtracted){
 			int pixelsCounter = 0;
 			for (int tileRows = tileInfo[rows][cols].x; tileRows < tileInfo[rows][cols].x + tileInfo[rows][cols].w; tileRows++){
 				for (int tileCols = tileInfo[rows][cols].y; tileCols < tileInfo[rows][cols].y + tileInfo[rows][cols].h; tileCols++){
-					if ((imageSubtracted.at<uchar>(tileRows, tileCols) == 255)){
+					if ((imageSubtracted.at<unsigned char>(tileRows, tileCols) == 255)){
 						pixelsCounter++;
 					}
 				}	//tile cols
