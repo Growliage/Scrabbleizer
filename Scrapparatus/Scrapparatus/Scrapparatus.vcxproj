@@ -27,7 +27,6 @@
     <ClCompile Include="VSBoard.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="extern.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

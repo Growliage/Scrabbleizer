@@ -22,26 +22,23 @@ struct tileStruct {
 	char letterTile = '0';	//The letter found at the spcified coordinated
 	int tileValue;	//What kind of (premium) tile is it. Gotten from boardValues
 	int x, y;	//Overlay rectanlges position on the board
-	int w = __argc;	//Used to find the width on a single tile
-	int h = __argc;	//Used to find the height of a single tile
+	int w = 0;	//Used to find the width on a single tile
+	int h = 0;	//Used to find the height of a single tile
 } tileInfo[15][15];
 
 int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4){
 
+	//Calculate where the tiles on the board are placed
 	static float xOffset = 6.5; //% offset on the scrabble board from the edge to the playing field on x-axis(Assume upright board)
-	static float tempCols = (image.cols) / 15;
-	static float tempRows = (image.rows) / 15;
-
-	for (int i = 0; i < 15; i++){
-		for (int j = 0; j < 15; i++){
-			tileInfo[i][j].w = tempRows;
-			tileInfo[i][j].h = tempCols;
-		}
-	}
-
 	int height = y3 - y1;
 	int width = x2 - x1;
 
+	for (int i = 0; i < 15; i++){
+		for (int j = 0; j < 15; i++){
+			tileInfo[i][j].w = height / 15;
+			tileInfo[i][j].h = width / 15;
+		}
+	}
 
 	//Forward declarations
 	int placeTiles(int startX, int startY, std::string input, bool hori);
@@ -52,7 +49,6 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int y1, int x2, int 
 	std::string letterRecognition(cv::Mat imageSlice);
 	bool SOWPODSsearch(std::string input);
 	int pointCounter(std::string input, std::vector<int> premiumTiles, bool allTiles);
-
 
 	//Values used by the pointCounter()
 	int boardValues[15][15] =
@@ -74,7 +70,6 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int y1, int x2, int 
 		{ 5, 1, 1, 2, 1, 1, 1, 5, 1, 1, 1, 2, 1, 1, 5 }		//O
 	};
 
-
 	//Variables used for input
 	std::string input = "";
 	std::string choice = "";
@@ -83,18 +78,31 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int y1, int x2, int 
 	std::string temp = "";
 	bool hori = true;
 
-	//Initialize all the structs!
-	for (int rows = 0; rows < 15; rows++){
-		for (int cols = 0; cols < 15; cols++){
-			tileInfo[rows][cols].tileValue = boardValues[rows][cols];
-			tileInfo[rows][cols].x = tileInfo[rows][cols].x + x1;	//rows * tempRows;
-			tileInfo[rows][cols].y = tileInfo[rows][cols].y + y1;	 //cols * tempCols;
-		}
+
+	tileInfo[0][0].x = x1;
+	tileInfo[0][0].y = y1;
+
+	/*Initialize all the structs!*/
+	//Initialize edges
+	for (int i = 1; i < 15; i++){
+		tileInfo[i][0].x = tileInfo[i - 1][0].x + width;
+		tileInfo[0][i].y = tileInfo[0][i - 1].y + height;
 	}
+
+
+	//Intialize the rest
+	for (int rows = 1; rows < 15; rows++){
+		for (int cols = 1; cols < 15; cols++){
+			tileInfo[rows][cols].tileValue = boardValues[rows][cols];
+				tileInfo[rows][cols].x = tileInfo[rows][cols - 1].x + tileInfo[rows][cols].w;
+				tileInfo[rows][cols].y = tileInfo[rows - 1][cols].y + tileInfo[rows][cols].h;
+			}
+		}
+	
 	tileInfo[7][7].playablePos = true;	//Set the middle tile as a playable position
 	do{
 		/*-----TEST: DRAWS THE BOARD-----*/
-		image = cv::Mat::zeros(width, height, image.type());
+		//image = cv::Mat::zeros(width, height, image.type());
 		for (int cols = 0; cols < 15; cols++){
 			for (int rows = 0; rows < 15; rows++){
 				cv::rectangle(image, cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y),	cv::Point(tileInfo[rows][cols].x + tileInfo[rows][cols].w, tileInfo[rows][cols].y + tileInfo[rows][cols].h), CV_RGB(0, 255, 255), 1, 1);
