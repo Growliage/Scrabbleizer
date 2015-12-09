@@ -217,6 +217,12 @@ int placeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
 	bool allTiles = false;
 	std::vector<int> premiumTiles;
 
+	for (int i = 0; i < 15; i++){	//Lock in all tiles
+		for (int j = 0; j < 15; j++){
+			tileInfo[i][j].newTile = false;
+		}
+	}
+
 	for (int i = 0; i < tileLoc.size(); i++){
 		if (tileInfo[tileLoc[i].first][tileLoc[i].second].letterTile == '0'){	//Check if a tile is played on a blank space
 			tileInfo[tileLoc[i].first][tileLoc[i].second].newTile = true;	//Set position as newly played tile to allow for removing
@@ -245,5 +251,14 @@ int placeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
 void removeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
 
 
+	for (int i = 0; i < 15; i++){	//Lock in all tiles
+		for (int j = 0; j < 15; j++){
+			if (tileInfo[i][j].newTile == true){
+				tileInfo[i][j].letterTile = '0';
+				tileInfo[i][j].cvLetterTile = "";
+				tileInfo[i][j].newTile = false;
+			}
+		}
+	}
 
 }
