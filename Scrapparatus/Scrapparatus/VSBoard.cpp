@@ -87,7 +87,7 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x2, int
 	checkTiles(tileLoc, input);	//Preliminary check to see if tiles are placed according to the rules
 
 	/*PSEUDO: If true, stop and wait for input to check the word in SOWPODS or for the user to acknowledge the next play.
-				If false, ask the user to remove the tiles due to illegal play*/
+	If false, ask the user to remove the tiles due to illegal play*/
 
 	return(1);
 
@@ -96,7 +96,7 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x2, int
 std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted){
 
 	float threshold = 0.1;	//Threshold for when a location needs to be noted
-	
+
 	std::vector<std::pair<int, int>> tileLoc;
 	int totalPixelsinStruct = tileInfo[0][0].w * tileInfo[0][0].h;
 
@@ -145,7 +145,7 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 		imshow("slice", imageSlice);
 		cv::waitKey(0);
 		sWord.append(letterRecognition(imageSlice));
-		}
+	}
 
 	return(sWord);
 	//return("word");
@@ -166,6 +166,7 @@ bool hori(std::vector<std::pair<int, int>> tileLoc){
 	return(hori);
 
 }
+
 bool checkTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
 
 	bool playablePos = false;
@@ -190,9 +191,38 @@ bool checkTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
 			letterMatch = false;
 			break;
 		}
-	}	
+	}
 
 	bool validPlacement = playablePos && letterMatch;	//(AND GATE) Both statements must be true for it to be a valid placement of tiles
 
 	return(validPlacement);
+}
+
+int placeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
+
+	int tilesPlayed;
+	bool allTiles;
+	std::vector<int> premiumTiles;
+
+	for (int i = 0; i < tileLoc.size(); i++){
+		if (tileInfo[tileLoc[i].first][tileLoc[i].second].letterTile == '0'){	//Check if a tile is played on a blank space
+			tileInfo[tileLoc[i].first][tileLoc[i].second].newTile = true;	//Set position as newly played tile to allow for removing
+			tilesPlayed++;
+		}
+		premiumTiles.push_back(tileInfo[tileLoc[i].first][tileLoc[i].second].tileValue);	//Get the premium values for point counting
+		tileInfo[tileLoc[i].first][tileLoc[i].second].letterTile = input.at(i);	//Set letter at position as a char
+		tileInfo[tileLoc[i].first][tileLoc[i].second].cvLetterTile = input.at(i);	//Set letter at position as cvString. Used to draw the board
+
+		//Set playable positions around the letters as true
+		tileInfo[(tileLoc[i].first) - 1][tileLoc[i].second].playablePos = true;
+		tileInfo[(tileLoc[i].first) + 1][tileLoc[i].second].playablePos = true;
+		tileInfo[(tileLoc[i].first)][(tileLoc[i].second) - 1].playablePos = true;
+		tileInfo[(tileLoc[i].first)][(tileLoc[i].second) + 1].playablePos = true;
+		tileInfo[(tileLoc[i].first)][(tileLoc[i].second)].playablePos = false; //Set the actual position to false(WOW SUCH HACK! MUCH UGLY!)
+	}
+
+}
+
+void removeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
+
 }
