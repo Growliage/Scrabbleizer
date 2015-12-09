@@ -35,7 +35,8 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x2, int
 	//Board manipulators
 	bool checkTiles(std::vector<std::pair<int, int>> tileLoc, std::string input);
 	int placeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input);
-	void removeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input);
+	void removeTiles(std::vector<std::pair<int, int>> tileLoc);
+	bool SOWPODSsearch(std::string input);
 
 	//Setting up the tiles
 	float tileWidth = (x2 - x1) / 15;
@@ -93,11 +94,28 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x2, int
 
 	if (checkTiles(tileLoc, input) == true){	//Preliminary check to see if tiles are placed according to the rules
 	
-		placeTiles(tileLoc, input);
+		std::cout << "The word played is" << input << ". Input \"C\" to contest. Otherwise, input anything else." << std::endl;
+		std::string playerInput;
+		std::cin >> playerInput;
 
+		if (playerInput == "c" || "C"){
+			bool validWord = SOWPODSsearch(input);
+
+			if (validWord == false){
+				std::cout << "The word does not exist! Please remove the tiles." << std::endl;
+				removeTiles(tileLoc);
+				return(0);
+			}
+			else {
+				std::cout << "That is in fact a real word." << std::endl;
+				return(placeTiles(tileLoc, input));
+			}
+		}
+		else {
+			return(placeTiles(tileLoc, input));
+		}
 	}
-	/*PSEUDO: If true, stop and wait for input to check the word in SOWPODS or for the user to acknowledge the next play.
-	If false, ask the user to remove the tiles due to illegal play*/
+
 
 	return(1);
 
@@ -248,7 +266,7 @@ int placeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
 
 }
 
-void removeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
+void removeTiles(std::vector<std::pair<int, int>> tileLoc){
 
 
 	for (int i = 0; i < 15; i++){	//Lock in all tiles
