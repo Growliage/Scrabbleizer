@@ -17,7 +17,7 @@ std::vector<std::pair<int, int>>boardDetection(cv::Mat image);
 cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage, int threshold);
 double homography(int,int,int,int,int,int,int,int, cv::Point topLeft, cv::Point bottomRight);
 cv::Point2d homog(int x, int y); // call to find corrospoding points in perfect image
-int changeTurn(int players, int x1, int y1,int x2,int y2,int x3,int y3,int x4,int y4);
+int changeTurn(int players, int x1, int y1,int x4,int y4);
 
 int main(int, char)
 {
@@ -140,6 +140,8 @@ int main(int, char)
 			return -1;
 
 		capture >> firstFrame;
+		capture >> firstFrame;
+
 		cv::waitKey(0);
 		std::cout << " Place the board so that it is withind the border shown on the screen, the word Scrabble should be at the buttom of the green square. After this is done press anykey three times to continue " << std::endl;
 		for (;;)
@@ -156,17 +158,19 @@ int main(int, char)
 		cv::Mat equalizedImage1 = histogramequalization(firstFrame);
 
 		capture >> startingImage;
+		capture >> startingImage;
+
 		cvtColor(startingImage, startingImage, CV_BGR2GRAY);
 		cv::Mat equalizedImage2 = histogramequalization(startingImage);
 
-		cv::Mat backGroundSubtraction = BackgroundSubtract(equalizedImage1, equalizedImage2, 70);
+		cv::Mat backGroundSubtraction = BackgroundSubtract(firstFrame, startingImage, 30);
 
 		for (int i = 0; i < backGroundSubtraction.rows; i++){ //y
 			for (int j = 0; j < backGroundSubtraction.cols; j++){ //x
 				if (j < 100 || j > backGroundSubtraction.cols - 80 || i < 20 || i > backGroundSubtraction.rows - 10)
 					backGroundSubtraction.at<unsigned char>(i, j) = 0;
-				if (j > 130 && j < backGroundSubtraction.cols - 115){
-					if (i > 50 && i < backGroundSubtraction.rows - 40){
+				if (j > 160 && j < backGroundSubtraction.cols - 145){
+					if (i > 70 && i < backGroundSubtraction.rows - 80){
 						backGroundSubtraction.at<unsigned char>(i, j) = 0;
 					}
 				}
@@ -174,7 +178,7 @@ int main(int, char)
 		}
 		//imshow("image", backGroundSubtraction);
 		GaussianBlur(backGroundSubtraction, backGroundSubtraction, cv::Size(7, 7), 1.5, 1.5);
-		Canny(backGroundSubtraction, backGroundSubtraction, 25, 30, 3);
+		Canny(backGroundSubtraction, backGroundSubtraction, 15, 30, 3);
 		imshow("bgs", backGroundSubtraction);
 		cv::waitKey(0);
 		std::vector< std::pair<int, int>> scrabbleBoard;
@@ -183,16 +187,14 @@ int main(int, char)
 			scrabbleBoard = boardDetection(backGroundSubtraction);
 		}
 
-		if (scrabbleBoard.size() != 4){
-			std::cout << "could not find board closing down try again" << std::endl;
-		}
-
 		for (int i = 0; i < scrabbleBoard.size(); i++){
 			int x = scrabbleBoard[i].first;
 			int y = scrabbleBoard[i].second;
 
+			cv::circle(startingImage, cv::Point(x, y),4,cv::Scalar(0,25,255),2);
 			std::cout << "x = " << x << " y = " << y << std::endl;
 		}
+		imshow("startingImage", startingImage);
 
 		x1 = scrabbleBoard[0].first;
 		y1 = scrabbleBoard[0].second;
@@ -206,21 +208,22 @@ int main(int, char)
 
 		homography(x1, y1, x2, y2, x3, y3, x4, y4, cv::Point(120, 30), cv::Point(frame.cols - 100, frame.rows - 20));
 
-		cv::Rect boardRect(120, 30, (frame.cols - 100 - 120), (frame.rows - 20 - 30));
+		int pfbx1 = 120;
+		int pfby1 = 30;
 
-		changeTurn(__argc, x1, y1, x2, y2, x3, y3, x4, y4);
+		int pfbx4 = frame.cols - 100;
+		int pfby4 = frame.rows - 20;
+
+		changeTurn(__argc, 120, 30, pfbx4, pfby4);
 
 		runOnce = false;
 	} while(runOnce == true);
-		//cv::Mat croppedBoard = startingImage(boardRect).clone();
-		//virtual board
-		
-		//imshow("croppedImage", croppedBoard);
 
+		cv::waitKey(0);
 		int players = 0;
 		std::cout << "Choose number of players (1-4)\n";
 		std::cin >> players;
-		(changeTurn(players, __argc, __argc, __argc, __argc, __argc, __argc, __argc, __argc));
+		(changeTurn(players, __argc, __argc, __argc, __argc));
 		//in changeTurn.cpp
 				//letter placement
 				//letter recognition

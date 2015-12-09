@@ -31,12 +31,15 @@ double homography(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4
 	return 0;
 }
 
-Point2d homog(int x, int y){ //Calculates what the new point's x-value will be in the second image
+int homogX(int x,int y){ //Calculates what the new point's x-value will be in the second image
 	double xO = 0, yO = 0;
-	xO = (( A.at<double>(0,0) * x + A.at<double>(1,0) * y + A.at<double>(2,0)) / (A.at<double>(6,0) * x + A.at<double>(7,0) * y + 1));
-	yO = (A.at<double>(3, 0) * x + A.at<double>(4, 0) * y + A.at<double>(5, 0)) / (A.at<double>(6, 0) * x + A.at<double>(7, 0) * y + 1);
-	Point2d Out(xO, yO);
-	return Out;
+	xO = ((A.at<double>(0, 0) * x + A.at<double>(1, 0) * y + A.at<double>(2, 0)) / (A.at<double>(6, 0) * x + A.at<double>(7, 0) * y + 1));
+	return xO;
 }
 
+int homogY(int x, int y){ //Calculates what the new point's x-value will be in the second image
+	double xO = 0, yO = 0;
+	yO = (A.at<double>(3, 0) * x + A.at<double>(4, 0) * y + A.at<double>(5, 0)) / (A.at<double>(6, 0) * x + A.at<double>(7, 0) * y + 1);
+	return yO;
+}
 

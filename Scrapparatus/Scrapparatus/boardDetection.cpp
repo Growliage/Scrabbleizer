@@ -12,12 +12,7 @@ std::vector<pair<int, int>>boardDetection(cv::Mat image)
 {
 	Mat img_edge, img_blur;
 	img_edge = image;
-	//image = cv::imread("C:/users/Bo/Pictures/redboard.jpg", 1);
-	//cv::blur(image, img_blur, cv::Size(8, 8));
-	//cv::Canny(img_blur, img_edge, 70, 90, 3);
-	//imshow("edge", img_edge);
-	//build accumulator use Mat for accumulator
-	//P[p_min .... p_max][theta_min(1 - 180).....theta_max]
+
 	int RHO = ((img_edge.rows * img_edge.rows) + (img_edge.cols * img_edge.cols));
 	int rho = sqrt(RHO);
 	cv::Mat accumulator = Mat::zeros(180, rho, CV_8UC1);
@@ -90,7 +85,7 @@ std::vector<pair<int, int>>boardDetection(cv::Mat image)
 				x1 = x2 = y1 = y1 = 0;
 
 				//threshold the points computed back into lines. i = theta
-				if (i > 0 && i < 18)
+				if (i > 0 && i < 20)
 				{
 					//y = (r-x*cos(theta) / sin(theta)
 					x1 = 0;
@@ -149,8 +144,8 @@ for (int i = 0; i < firstPoint.size(); i++)
 }
 
 //segment intersections to 1ind board
-int topLineLength = img_edge.cols * 0.70; // line threshold % of screen
-int MaxLineLength = img_edge.cols * 1;
+int topLineLength = img_edge.cols * 0.80; // line threshold % of screen
+int MaxLineLength = img_edge.cols * 0.90;
 std::vector< std::pair<int, int>> board;
 
 for (int i = 0; i < intersections.size(); i++)
@@ -269,6 +264,19 @@ for (int i = 0; i < board.size(); i++){
 std::vector< std::pair<int, int>> finalBoard;
 
 if (TL.size() == 0){
+	std::cout << "could not find upper left corner try again " << std::endl;
+	exit(1);
+}
+if (TR.size() == 0){
+	std::cout << "could not find upper right corner try again " << std::endl;
+	exit(1);
+}
+if (BL.size() == 0){
+	std::cout << "could not find buttom left corner try again " << std::endl;
+	exit(1);
+}
+if (BR.size() == 0){
+	std::cout << "could not find buttom right corner try again " << std::endl;
 	exit(1);
 }
 
