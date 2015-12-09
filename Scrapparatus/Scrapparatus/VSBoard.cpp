@@ -18,7 +18,7 @@ struct TileStruct {
 	float h;	//Used to find the height of a single tile
 } tileInfo[15][15];
 
-int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x2, int y2, int x3, int y3, int x4, int y4){
+int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x4, int y4){
 
 	/*Forward declarations*/
 	//Tile manipulators
@@ -35,11 +35,12 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x2, int
 	//Board manipulators
 	bool checkTiles(std::vector<std::pair<int, int>> tileLoc, std::string input);
 	int placeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input);
-	void removeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input);
+	void removeTiles(std::vector<std::pair<int, int>> tileLoc);
+	bool SOWPODSsearch(std::string input);
 
 	//Setting up the tiles
-	float tileWidth = (x2 - x1) / 15;
-	float tileHeight = (y3 - y1) / 15;
+	float tileWidth = (x4 - x1) / 15;
+	float tileHeight = (y4 - y1) / 15;
 
 	//Values used by the pointCounter()
 	int boardValues[15][15] =
@@ -93,11 +94,28 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x2, int
 
 	if (checkTiles(tileLoc, input) == true){	//Preliminary check to see if tiles are placed according to the rules
 	
-		placeTiles(tileLoc, input);
+		std::cout << "The word played is" << input << ". Input \"C\" to contest. Otherwise, input anything else." << std::endl;
+		std::string playerInput;
+		std::cin >> playerInput;
 
+		if (playerInput == "c" || "C"){
+			bool validWord = SOWPODSsearch(input);
+
+			if (validWord == false){
+				std::cout << "The word does not exist! Please remove the tiles." << std::endl;
+				removeTiles(tileLoc);
+				return(0);
+			}
+			else {
+				std::cout << "That is in fact a real word." << std::endl;
+				return(placeTiles(tileLoc, input));
+			}
+		}
+		else {
+			return(placeTiles(tileLoc, input));
+		}
 	}
-	/*PSEUDO: If true, stop and wait for input to check the word in SOWPODS or for the user to acknowledge the next play.
-	If false, ask the user to remove the tiles due to illegal play*/
+
 
 	return(1);
 
@@ -154,7 +172,15 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 		imageROI.copyTo(imageSlice);
 		imshow("slice", imageSlice);
 		cv::waitKey(0);
-		sWord.append(letterRecognition(imageSlice));
+
+		std::string tempString = letterRecognition(imageSlice);
+
+		if (tempString == "Error"){
+			sWord.append("?");
+		}
+		else {
+			sWord.append(tempString);
+		}
 	}
 
 	return(sWord);
@@ -217,6 +243,12 @@ int placeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
 	bool allTiles = false;
 	std::vector<int> premiumTiles;
 
+	for (int i = 0; i < 15; i++){	//Lock in all tiles
+		for (int j = 0; j < 15; j++){
+			tileInfo[i][j].newTile = false;
+		}
+	}
+
 	for (int i = 0; i < tileLoc.size(); i++){
 		if (tileInfo[tileLoc[i].first][tileLoc[i].second].letterTile == '0'){	//Check if a tile is played on a blank space
 			tileInfo[tileLoc[i].first][tileLoc[i].second].newTile = true;	//Set position as newly played tile to allow for removing
@@ -242,8 +274,17 @@ int placeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
 
 }
 
-void removeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
+void removeTiles(std::vector<std::pair<int, int>> tileLoc){
 
 
+	for (int i = 0; i < 15; i++){	//Lock in all tiles
+		for (int j = 0; j < 15; j++){
+			if (tileInfo[i][j].newTile == true){
+				tileInfo[i][j].letterTile = '0';
+				tileInfo[i][j].cvLetterTile = "";
+				tileInfo[i][j].newTile = false;
+			}
+		}
+	}
 
 }

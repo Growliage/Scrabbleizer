@@ -29,18 +29,20 @@ bool SOWPODSsearch(std::string input){
 
 		std::cout << "Dictionary has been loaded." << std::endl;
 
-		//Binary search
-		//if(std::binary_search(lines, input) {
-		//realWord = true;
-		//}
+		for (int i = 0; i < input.length; i++){
+			if (input.at(i) == '?'){
+				std::cout << "\nWhat is letter number " << i << "?" << std::endl;
+				char letter;
+				std::cin >> letter;
+				input.at(i) = letter;
+			}
+		}
 
 		return(binarySearch(lines, input));
 
 		dict.close();
 	}
-		//return(realWord);
+		return(realWord);
 }
-	//bool binarySearch(std::vector<std::string> lines, std::string input, int vectorMiddle, int stringIndexToCheck);
-	//bool realWord = (binarySearch(lines, input, (lines.size() / 2), 0));
-	
+
 	
