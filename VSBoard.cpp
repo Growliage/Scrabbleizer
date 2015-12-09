@@ -106,14 +106,14 @@ void VSBoard(cv::Mat image, cv::Mat imageSubtracted){
 	tileInfo[7][7].playablePos = true;	//Set the middle tile to be a place where a tile can be placed
 	do{
 		/*-----TESTING: DRAWS THE BOARD-----*/
-		image = cv::Mat::zeros(width, height, image.type());
-		for (int cols = 0; cols < 15; cols++){
-			for (int rows = 0; rows < 15; rows++){
-				cv::rectangle(image, cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y),	cv::Point(tileInfo[rows][cols].x + tileInfo[rows][cols].w, tileInfo[rows][cols].y + tileInfo[rows][cols].h), CV_RGB(0, 255, 255), 1, 1);
-				//Draw text in fields
-				cv::putText(image, tileInfo[rows][cols].cvLetterTile, cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar::all(255), 1, 1, false);
-			}
-		}
+		//image = cv::Mat::zeros(width, height, image.type());
+		//for (int cols = 0; cols < 15; cols++){
+		//	for (int rows = 0; rows < 15; rows++){
+		//		cv::rectangle(image, cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y),	cv::Point(tileInfo[rows][cols].x + tileInfo[rows][cols].w, tileInfo[rows][cols].y + tileInfo[rows][cols].h), CV_RGB(0, 255, 255), 1, 1);
+		//		//Draw text in fields
+		//		cv::putText(image, tileInfo[rows][cols].cvLetterTile, cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar::all(255), 1, 1, false);
+		//	}
+		//}
 		//imshow("Image", image);
 		//imshow("subtracted", imageSubtracted);
 		//cv::waitKey(30);
