@@ -18,7 +18,7 @@ struct TileStruct {
 	float h;	//Used to find the height of a single tile
 } tileInfo[15][15];
 
-int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x2, int y2, int x3, int y3, int x4, int y4){
+int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x4, int y4){
 
 	/*Forward declarations*/
 	//Tile manipulators
@@ -39,8 +39,8 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x2, int
 	bool SOWPODSsearch(std::string input);
 
 	//Setting up the tiles
-	float tileWidth = (x2 - x1) / 15;
-	float tileHeight = (y3 - y1) / 15;
+	float tileWidth = (x4 - x1) / 15;
+	float tileHeight = (y4 - y1) / 15;
 
 	//Values used by the pointCounter()
 	int boardValues[15][15] =
