@@ -172,7 +172,15 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 		imageROI.copyTo(imageSlice);
 		imshow("slice", imageSlice);
 		cv::waitKey(0);
-		sWord.append(letterRecognition(imageSlice));
+
+		std::string tempString = letterRecognition(imageSlice);
+
+		if (tempString == "Error"){
+			sWord.append("?");
+		}
+		else {
+			sWord.append(tempString);
+		}
 	}
 
 	return(sWord);
