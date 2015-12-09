@@ -86,7 +86,7 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x2, int
 				cv::Point(tileInfo[rows][cols].x + tileInfo[rows][cols].w, tileInfo[rows][cols].y + tileInfo[rows][cols].h), //point 2
 				CV_RGB(0, 255, 255), 1);
 		}
-
+	}
 	std::vector<std::pair<int, int>> tileLoc = tileAnalyzer(imageSubtracted);	//Find where new tiles are placed
 	bool horizontal = hori(tileLoc);	//Check if it's horiszontal or vertical
 	std::string input = tileCropper(image, tileLoc);	//Have tileCropper send individual letters to letterRecognition
