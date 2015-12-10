@@ -14,7 +14,7 @@ cv::Mat sumFilter(cv::Mat inImage, cv::Mat outImage, int threshold){
 				+ inImage.at<uchar>(i, j - 1) + inImage.at<uchar>(i, j + 1)
 				+ inImage.at<uchar>(i + 1, j);
 
-			if (sumVal == threshold){
+			if (sumVal >= threshold){
 				outImage.at<uchar>(i, j) = 255;
 			}else
 				outImage.at<uchar>(i, j) = 0;

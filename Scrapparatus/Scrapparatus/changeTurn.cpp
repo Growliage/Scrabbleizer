@@ -8,7 +8,6 @@ cv::Mat histogramequalization(cv::Mat image);
 cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage, int threshold);
 cv::Mat sumFilter(cv::Mat inImage, cv::Mat outImage, int threshold);
 cv::Mat ColourThres(cv::Mat inImage);
-cv::Mat Dialate(cv::Mat inImage, int threshold);
 int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int y1, int x4, int y4); 
 int homogX(int x, int y);
 int homogY(int x, int y);
@@ -31,17 +30,6 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 		if (!capture.isOpened())
 			return -1;
 
-		/*/capture >> beforeTurn;
-		bool grabResult = capture.grab();
-		if (!grabResult) {
-			cout << "Something wrong.";
-		}
-		else {
-			capture.retrieve(beforeTurn);
-		}
-		cout << "capture before" << endl;
-		*/
-
 		//std::thread second(VSBoard(image, imageSubtracted)); //Pass a regular and an image subtracted image
 
 		int counter = rand() % 100; //This is is just a placeholder for the point counting class/program
@@ -56,13 +44,16 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 			capture >> afterTurn;
 			imshow(" before", beforeTurn);
 			std::cout << "capture after" << std::endl;
+
 			beforeTurn = ColourThres(beforeTurn);
+
 			cvtColor(beforeTurn, beforeTurn, CV_BGR2GRAY);
 			cvtColor(afterTurn, afterTurn, CV_BGR2GRAY);
 
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
+
 			cv::Mat homogImage = temp.clone();
 			for (int i = 15; i < outImage.rows-15; i++){
 				for (int j = 50; j < outImage.cols-50; j++){
@@ -71,6 +62,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 					homogImage.at<uchar>(y, x) =  outImage.at<uchar>(i,j);
 				}
 			}
+
 			imshow("homogImage",homogImage);
 			addPoints = VSBoard(afterTurn, homogImage, x1, y1, x4, y4);
 
@@ -148,9 +140,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 			sumFilter(temp, outImage, sumThreshold);
 			addPoints = VSBoard(afterTurn, outImage, __argc, __argc, __argc, __argc);
 
-			imshow("letters", temp);
 			imshow("sumThreshold", outImage);
-			imshow("afterTurn", afterTurn);
 
 			key = cv::waitKey(0);
 			if (key == 108){

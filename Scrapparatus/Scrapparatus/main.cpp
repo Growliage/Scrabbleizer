@@ -159,7 +159,7 @@ int main(int, char)
 
 		capture >> startingImage;
 		capture >> startingImage;
-
+		std::cout << startingImage.rows << "   " << startingImage.cols << std::endl;
 		cvtColor(startingImage, startingImage, CV_BGR2GRAY);
 		cv::Mat equalizedImage2 = histogramequalization(startingImage);
 
