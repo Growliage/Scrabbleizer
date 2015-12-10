@@ -167,7 +167,7 @@ int compareHistograms(cv::Mat image){
 		value = 0;
 	}
 	if (lettervalue > 50){
-		imshow("ugly", image);
+		//imshow("ugly", image);
 		std::cout << "ugly: " << lettervalue << std::endl;
 		return 1337;
 	}
@@ -238,10 +238,10 @@ cv::Mat removeNoise(cv::Mat image){
 		cv::Point(4, 4));
 	erode(image, image, element);
 	dilate(image, image, element);
-	imshow("after closing", image);
+	//imshow("after closing", image);
 
 	image = cropImage(image);
-	imshow("after crop", image);
+	//imshow("after crop", image);
 
 	return image;
 }
