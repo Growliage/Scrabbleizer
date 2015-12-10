@@ -90,7 +90,7 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 		std::vector<std::pair<int, int>> tileLoc = tileAnalyzer(imageSubtracted);	//Find where new tiles are placed
 
 		if (tileLoc.empty()){	
-			returnVector.at[1] = 1;
+			returnVector[1] = 1;
 			return(returnVector);
 		}
 
@@ -103,27 +103,27 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 			std::cin >> playerInput;
 
 			if (playerInput == "c" || "C"){
-				returnVector.at[2] = 1;
+				returnVector[2] = 1;
 				std::cout << "\nWhich player is contesting the word?" << std::endl;
 				int player;
 				std::cin >> player;
-				returnVector.at[3] = player;
+				returnVector[3] = player;
 				bool validWord = SOWPODSsearch(input);
 
 				if (validWord == false){
 					std::cout << "\nThe word does not exist! Please remove the tiles.";
-					returnVector.at[4] = 1;
+					returnVector[4] = 1;
 					removeTiles(tileLoc);
 
 				}
 				else {
 					std::cout << "\nThat is a real word.";
-					returnVector.at[0] = placeTiles(tileLoc, input);
+					returnVector[0] = placeTiles(tileLoc, input);
 					return(returnVector);
 				}
 			}
 			else {
-				returnVector.at[0] = placeTiles(tileLoc, input);
+				returnVector[0] = placeTiles(tileLoc, input);
 				return(returnVector);
 			}
 		}
