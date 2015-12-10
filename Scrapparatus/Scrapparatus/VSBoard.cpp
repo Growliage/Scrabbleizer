@@ -70,8 +70,8 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 
 	for (int i = 0; i < 15; i++){
 		for (int j = 0; j < 15; j++){
-				tileInfo[i][j].w = ((x4 - x1) / 15) - 5;
-				tileInfo[i][j].h = ((y4 - y1) / 15) - 5;
+				tileInfo[i][j].w = (x4 - x1) / 15;
+				tileInfo[i][j].h = (y4 - y1) / 15;
 			tileInfo[i][j].tileValue = boardValues[i][j];
 		}
 	}
@@ -81,8 +81,8 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 	//Set the (x,y) coords of all the tiles
 	for (int rows = 0; rows < 15; rows++){
 		for (int cols = 0; cols < 15; cols++){
-			tileInfo[rows][cols].x = x1 + (tileInfo[rows][cols].w * cols) + 5;
-			tileInfo[rows][cols].y = y1 + (tileInfo[rows][cols].h * rows) + 5;
+			tileInfo[rows][cols].x = x1 + (tileInfo[rows][cols].w * cols);
+			tileInfo[rows][cols].y = y1 + (tileInfo[rows][cols].h * rows);
 		}
 	}
 
@@ -161,8 +161,8 @@ std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted){
 		for (int structCol = 0; structCol < 15; structCol++){
 			
 			int pixelsCounter = 0;
-			for (int tileRows = tileInfo[structRow][structCol].x; tileRows < tileInfo[structRow][structCol].x + tileInfo[structRow][structCol].w; tileRows++){
-				for (int tileCols = tileInfo[structRow][structCol].y; tileCols < tileInfo[structRow][structCol].y + tileInfo[structRow][structCol].h; tileCols++){
+			for (int tileRows = tileInfo[structRow][structCol].x + 5; tileRows < tileInfo[structRow][structCol].x + tileInfo[structRow][structCol].w - 5; tileRows++){
+				for (int tileCols = tileInfo[structRow][structCol].y + 5; tileCols < tileInfo[structRow][structCol].y + tileInfo[structRow][structCol].h - 5; tileCols++){
 					
 					if ((imageSubtracted.at<unsigned char>(tileCols, tileRows) > 128)){
 						pixelsCounter++;
