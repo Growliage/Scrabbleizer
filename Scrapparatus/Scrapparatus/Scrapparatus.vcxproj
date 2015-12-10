@@ -22,6 +22,7 @@
     <ClCompile Include="letterRecogition.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pointCounter.cpp" />
+    <ClCompile Include="scaling.cpp" />
     <ClCompile Include="SOWPODSsearchBinary.cpp" />
     <ClCompile Include="sumFilter.cpp" />
     <ClCompile Include="VSBoard.cpp" />
