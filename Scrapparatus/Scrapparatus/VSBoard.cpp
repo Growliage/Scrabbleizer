@@ -161,8 +161,8 @@ std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted){
 		for (int structCol = 0; structCol < 15; structCol++){
 			
 			int pixelsCounter = 0;
-			for (int tileRows = tileInfo[structRow][structCol].x + 5; tileRows < tileInfo[structRow][structCol].x + tileInfo[structRow][structCol].w - 5; tileRows++){
-				for (int tileCols = tileInfo[structRow][structCol].y + 5; tileCols < tileInfo[structRow][structCol].y + tileInfo[structRow][structCol].h - 5; tileCols++){
+			for (int tileRows = tileInfo[structRow][structCol].x; tileRows < tileInfo[structRow][structCol].x + tileInfo[structRow][structCol].w; tileRows++){
+				for (int tileCols = tileInfo[structRow][structCol].y; tileCols < tileInfo[structRow][structCol].y + tileInfo[structRow][structCol].h; tileCols++){
 					
 					if ((imageSubtracted.at<unsigned char>(tileCols, tileRows) > 128)){
 						pixelsCounter++;
