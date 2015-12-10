@@ -21,11 +21,11 @@ struct TileStruct {
 std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x4, int y4){
 
 	std::vector<int> returnVector;
-	returnVector.at[0] = 0;	//Points (if any) awarded
-	returnVector.at[1] = 0;	//Did the player skip their turn(1 true, 0 false)
-	returnVector.at[2] = 0; //Was the word contested?
-	returnVector.at[3] = 0; //If it was contested, which player was it?
-	returnVector.at[4] = 0; //Was it successfully contested?
+	returnVector.push_back(0);	//Points (if any) awarded
+	returnVector.push_back(0);	//Did the player skip their turn(1 true, 0 false)
+	returnVector.push_back(0); //Was the word contested?
+	returnVector.push_back(0); //If it was contested, which player was it?
+	returnVector.push_back(0); //Was it successfully contested?
 
 	/*Forward declarations*/
 	//Tile manipulators
