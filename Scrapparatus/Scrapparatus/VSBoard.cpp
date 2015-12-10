@@ -91,8 +91,8 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 	//Set the (x,y) coords of all the tiles
 	for (int rows = 0; rows < 15; rows++){
 		for (int cols = 0; cols < 15; cols++){
-			tileInfo[rows][cols].x = x1 + (tileWidth * cols);
-			tileInfo[rows][cols].y = y1 + (tileHeight * rows);
+			tileInfo[rows][cols].x = x1 + (tileInfo[rows][cols].w * cols);
+			tileInfo[rows][cols].y = y1 + (tileInfo[rows][cols].h * rows);
 		}
 	}
 
