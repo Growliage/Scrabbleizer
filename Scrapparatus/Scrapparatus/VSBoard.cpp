@@ -13,9 +13,9 @@ struct TileStruct {
 	cv::String cvLetterTile = "";	//Because openCV doesn't cooperate unless it's treated like a special fucking snowflake.
 	char letterTile = '0';	//The letter found at the spcified coordinated
 	int tileValue;	//What kind of (premium) tile is it. Gotten from boardValues
-	int x, y;	//Tiles (x,y) coords on the picture
-	float w;	//Used to find the width on a single tile
-	float h;	//Used to find the height of a single tile
+	int x, y;	//Tiles upper left corner (x,y) coords on the picture
+	int w;	//Used to find the width on a single tile
+	int h;	//Used to find the height of a single tile
 } tileInfo[15][15];
 
 int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x4, int y4){
@@ -39,8 +39,8 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x4, int
 	bool SOWPODSsearch(std::string input);
 
 	//Setting up the tiles
-	float tileWidth = (x4 - x1) / 15;
-	float tileHeight = (y4 - y1) / 15;
+	int tileWidth = (x4 - x1) / 15;
+	int tileHeight = (y4 - y1) / 15;
 
 	//Values used by the pointCounter()
 	int boardValues[15][15] =
@@ -80,44 +80,50 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x4, int
 		}
 	}
 
-	for (int cols = 0; cols < 15; cols++){
+	do{
+		//Draw the board
 		for (int rows = 0; rows < 15; rows++){
-			cv::rectangle(image,
-				cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y), //Point 1
-				cv::Point(tileInfo[rows][cols].x + tileInfo[rows][cols].w, tileInfo[rows][cols].y + tileInfo[rows][cols].h), //point 2
-				CV_RGB(0, 255, 255), 1);
+			for (int cols = 0; cols < 15; cols++){
+				cv::rectangle(image,
+					cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y), //Point 1
+					cv::Point(tileInfo[rows][cols].x + tileInfo[rows][cols].w, tileInfo[rows][cols].y + tileInfo[rows][cols].h), //point 2
+					CV_RGB(0, 255, 255), 1);
+			}
 		}
-	}
-	std::vector<std::pair<int, int>> tileLoc = tileAnalyzer(imageSubtracted);	//Find where new tiles are placed
-	bool horizontal = hori(tileLoc);	//Check if it's horiszontal or vertical
-	std::string input = tileCropper(image, tileLoc);	//Have tileCropper send individual letters to letterRecognition
+		std::vector<std::pair<int, int>> tileLoc = tileAnalyzer(imageSubtracted);	//Find where new tiles are placed
+		std::string input = tileCropper(image, tileLoc);	//Have tileCropper send individual letters to letterRecognition
 
-	if (checkTiles(tileLoc, input) == true){	//Preliminary check to see if tiles are placed according to the rules
-	
-		std::cout << "The word played is" << input << ". Input \"C\" to contest. Otherwise, input anything else." << std::endl;
-		std::string playerInput;
-		std::cin >> playerInput;
+		if (checkTiles(tileLoc, input) == true){	//Preliminary check to see if tiles are placed according to the rules
 
-		if (playerInput == "c" || "C"){
-			bool validWord = SOWPODSsearch(input);
+			std::cout << "\nThe word played is" << input << ". Input \"C\" to contest.";
+			std::string playerInput;
+			std::cin >> playerInput;
 
-			if (validWord == false){
-				std::cout << "The word does not exist! Please remove the tiles." << std::endl;
-				removeTiles(tileLoc);
-				return(0);
+			if (playerInput == "c" || "C"){
+				bool validWord = SOWPODSsearch(input);
+
+				if (validWord == false){
+					std::cout << "\nThe word does not exist! Please remove the tiles.";
+					removeTiles(tileLoc);
+					return(0);
+				}
+				else {
+					std::cout << "\nThat is a real word.";
+					return(placeTiles(tileLoc, input));
+				}
 			}
 			else {
-				std::cout << "That is in fact a real word." << std::endl;
 				return(placeTiles(tileLoc, input));
 			}
 		}
 		else {
-			return(placeTiles(tileLoc, input));
+			std::cout << "\nInvalid placement.";
 		}
-	}
 
 
-	return(1);
+
+		return(1);
+	} while (true);
 
 }
 
@@ -130,13 +136,12 @@ std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted){
 
 	for (int rows = 0; rows < 15; rows++){
 		for (int cols = 0; cols < 15; cols++){
-
-
+			
 			int pixelsCounter = 0;
 			for (int tileRows = tileInfo[rows][cols].x; tileRows < tileInfo[rows][cols].x + tileInfo[rows][cols].w; tileRows++){
 				for (int tileCols = tileInfo[rows][cols].y; tileCols < tileInfo[rows][cols].y + tileInfo[rows][cols].h; tileCols++){
 
-					if ((imageSubtracted.at<unsigned char>(tileRows, tileCols) > 128)){
+					if ((imageSubtracted.at<uchar>(tileRows, tileCols) > 128)){
 						pixelsCounter++;
 					}
 				}	//tile cols
@@ -185,22 +190,6 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 
 	return(sWord);
 	//return("word");
-}
-
-//This doesn't look like it's going to be needed
-bool hori(std::vector<std::pair<int, int>> tileLoc){
-
-	bool hori;
-
-	if (tileLoc[0].first == tileLoc[1].first){
-		hori = true;
-	}
-	else{
-		hori = false;
-	}
-
-	return(hori);
-
 }
 
 bool checkTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
