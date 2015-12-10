@@ -65,7 +65,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 			}
 
 			imshow("homogImage",homogImage);
-			addPoints = VSBoard(afterTurn, homogImage, x1, y1, x4, y4).at[0];
+			addPoints = VSBoard(afterTurn, homogImage, x1, y1, x4, y4)[0];
 
 			imshow("letters", temp);
 			imshow("sumThreshold", outImage);
@@ -102,7 +102,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
-			addPoints = VSBoard(afterTurn, outImage, x1, y1, x4, y4).at[0];
+			addPoints = VSBoard(afterTurn, outImage, x1, y1, x4, y4)[0];
 
 			imshow("letters", temp);
 			imshow("sumThreshold", outImage);
@@ -139,7 +139,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
-			addPoints = VSBoard(afterTurn, outImage, x1, y1, x4, y4).at[0];
+			addPoints = VSBoard(afterTurn, outImage, x1, y1, x4, y4)[0];
 
 			imshow("sumThreshold", outImage);
 
@@ -174,7 +174,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
-			addPoints = VSBoard(afterTurn, outImage, x1, y1, x4, y4).at[0];
+			addPoints = VSBoard(afterTurn, outImage, x1, y1, x4, y4)[0];
 
 			imshow("letters", temp);
 			imshow("sumThreshold", outImage);
