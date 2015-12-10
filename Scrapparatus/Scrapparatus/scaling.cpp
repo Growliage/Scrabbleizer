@@ -1,6 +1,6 @@
-//#include <iostream>
 #include "opencv2\core\core.hpp"
-//#include "opencv2\highgui\highgui.hpp"
+#include <iostream>
+#include "opencv2\highgui\highgui.hpp"
 
 cv::Mat factorScaling(float Sx, float Sy, cv::Mat imageIn)	{
 	cv::Mat imageOut(imageIn.rows * Sy, imageIn.cols * Sx, CV_8UC1, cv::Scalar(0));
@@ -17,8 +17,8 @@ cv::Mat factorScaling(float Sx, float Sy, cv::Mat imageIn)	{
 cv::Mat pixelScaling(int Px, int Py, cv::Mat imageIn){
 
 	//Calculate the scaling factors from input
-float Sx = float(Px / imageIn.rows);
-float Sy = float(Py / imageIn.cols);
+float Sx = (float)Px / imageIn.rows;
+float Sy = (float)Py / imageIn.cols;
 
 return(factorScaling(Sx, Sy, imageIn));
 

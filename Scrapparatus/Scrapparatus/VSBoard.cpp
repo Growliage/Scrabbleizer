@@ -161,8 +161,8 @@ std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted){
 		for (int structCol = 0; structCol < 15; structCol++){
 			
 			int pixelsCounter = 0;
-			for (int tileRows = tileInfo[structRow][structCol].x; tileRows < tileInfo[structRow][structCol].x + tileInfo[structRow][structCol].w; tileRows++){
-				for (int tileCols = tileInfo[structRow][structCol].y; tileCols < tileInfo[structRow][structCol].y + tileInfo[structRow][structCol].h; tileCols++){
+			for (int tileRows = tileInfo[structRow][structCol].x + 5; tileRows < tileInfo[structRow][structCol].x + tileInfo[structRow][structCol].w - 5; tileRows++){
+				for (int tileCols = tileInfo[structRow][structCol].y + 5; tileCols < tileInfo[structRow][structCol].y + tileInfo[structRow][structCol].h - 5; tileCols++){
 					
 					if ((imageSubtracted.at<unsigned char>(tileCols, tileRows) > 128)){
 						pixelsCounter++;
@@ -186,10 +186,12 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 
 	//Forward declaration
 	std::string letterRecognition(cv::Mat imageSlice);
+	cv::Mat factorScaling(float Sx, float Sy, cv::Mat imageIn);	//Hail Mary! Let's hope this works.
 
-	cv::Mat imageSlice;
-	cv::Mat imageROI;
-	std::string sWord = "";
+	float Sf = 2;	//Factor to scale the image by
+	cv::Mat imageSlice;	//The image to send to letter recognition
+	cv::Mat imageROI;	//The region of interest that needs to be sliced
+	std::string sWord = "";	
 	imshow("Full image", image);
 
 	for (int i = 0; i < tileLoc.size(); i++){
@@ -202,7 +204,7 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 		imshow("slice", imageSlice);
 		cv::waitKey(0);
 
-		std::string tempString = letterRecognition(imageSlice);
+		std::string tempString = letterRecognition(factorScaling(Sf,Sf,imageSlice));
 
 		if (tempString == "Error"){
 			sWord.append("?");
