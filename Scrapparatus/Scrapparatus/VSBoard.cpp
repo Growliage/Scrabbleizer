@@ -87,6 +87,18 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 		}
 	}
 
+
+	for (int rows = 0; rows < 15; rows++){
+		for (int cols = 0; cols < 15; cols++){
+			cv::rectangle(image,
+				cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y), //Point 1
+				cv::Point(tileInfo[rows][cols].x + tileInfo[rows][cols].w, tileInfo[rows][cols].y + tileInfo[rows][cols].h), //point 2
+				CV_RGB(0, 255, 255), 1);
+		}
+	}
+
+	imshow("Grid overlay", image);
+
 	bool keepRunning = true;
 
 	do{
@@ -200,7 +212,7 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 			sWord.append(tempString);
 		}
 	}
-
+	cv::destroyAllWindows;
 	return(sWord);
 	//return("word");
 }
