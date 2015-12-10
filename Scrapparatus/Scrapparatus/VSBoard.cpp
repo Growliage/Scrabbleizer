@@ -134,21 +134,21 @@ std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted){
 	std::vector<std::pair<int, int>> tileLoc;
 	int totalPixelsinStruct = tileInfo[0][0].w * tileInfo[0][0].h;
 
-	for (int rows = 0; rows < 15; rows++){
-		for (int cols = 0; cols < 15; cols++){
+	for (int structRow = 0; structRow < 15; structRow++){
+		for (int structCol = 0; structCol < 15; structCol++){
 			
 			int pixelsCounter = 0;
-			for (int tileRows = tileInfo[rows][cols].x; tileRows < tileInfo[rows][cols].x + tileInfo[rows][cols].w; tileRows++){
-				for (int tileCols = tileInfo[rows][cols].y; tileCols < tileInfo[rows][cols].y + tileInfo[rows][cols].h; tileCols++){
-
-					if ((imageSubtracted.at<uchar>(tileRows, tileCols) > 128)){
+			for (int tileRows = tileInfo[structRow][structCol].x; tileRows < tileInfo[structRow][structCol].x + tileInfo[structRow][structCol].w; tileRows++){
+				for (int tileCols = tileInfo[structRow][structCol].y; tileCols < tileInfo[structRow][structCol].y + tileInfo[structRow][structCol].h; tileCols++){
+					std::cout << tileRows << "   " << tileCols << std::endl;
+					if ((imageSubtracted.at<unsigned char>(tileCols, tileRows) > 128)){
 						pixelsCounter++;
 					}
 				}	//tile cols
 			}	//tile rows
 
 			if (((float)pixelsCounter / (float)totalPixelsinStruct) > threshold){
-				tileLoc.push_back(std::make_pair(cols, rows));
+				tileLoc.push_back(std::make_pair(structCol, structRow));
 			}
 
 		}	//Cols on image
