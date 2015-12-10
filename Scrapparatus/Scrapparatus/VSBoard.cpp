@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <tuple>
+#include <math.h>
 
 //Structs array used for initialization
 struct TileStruct {
@@ -45,12 +46,6 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 	void removeTiles(std::vector<std::pair<int, int>> tileLoc);
 	bool SOWPODSsearch(std::string input);
 
-	//Setting up the tiles
-	int width = x4 - x1;
-	int tileWidth = (x4 - x1) / 15;
-	std::cout << width << "    " << tileWidth << std::endl;
-	int tileHeight = (y4 - y1) / 15;
-
 	//Values used by the pointCounter()
 	int boardValues[15][15] =
 	{
@@ -71,10 +66,22 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 		{ 5, 1, 1, 2, 1, 1, 1, 5, 1, 1, 1, 2, 1, 1, 5 }		//O
 	};
 
+	bool roundSwitch = false;
+
 	for (int i = 0; i < 15; i++){
 		for (int j = 0; j < 15; j++){
-			tileInfo[i][j].w = tileWidth;
-			tileInfo[i][j].h = tileHeight;
+
+			if (roundSwitch == false){
+				tileInfo[i][j].w = ceil((x4 - x1) / 15);
+				tileInfo[i][j].h = ceil((y4 - y1) / 15);
+				roundSwitch = true;
+			}
+			else {
+				tileInfo[i][j].w = floor((x4 - x1) / 15);
+				tileInfo[i][j].h = floor((y4 - y1) / 15);
+				roundSwitch = false;
+			}
+
 			tileInfo[i][j].tileValue = boardValues[i][j];
 		}
 	}
