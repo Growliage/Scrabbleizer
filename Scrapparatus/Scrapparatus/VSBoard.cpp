@@ -70,8 +70,8 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 
 	for (int i = 0; i < 15; i++){
 		for (int j = 0; j < 15; j++){
-				tileInfo[i][j].w = (x4 - x1) / 15;
-				tileInfo[i][j].h = (y4 - y1) / 15;
+				tileInfo[i][j].w = ((x4 - x1) / 15) - 5;
+				tileInfo[i][j].h = ((y4 - y1) / 15) - 5;
 			tileInfo[i][j].tileValue = boardValues[i][j];
 		}
 	}
@@ -81,8 +81,8 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 	//Set the (x,y) coords of all the tiles
 	for (int rows = 0; rows < 15; rows++){
 		for (int cols = 0; cols < 15; cols++){
-			tileInfo[rows][cols].x = x1 + (tileInfo[rows][cols].w * cols);
-			tileInfo[rows][cols].y = y1 + (tileInfo[rows][cols].h * rows);
+			tileInfo[rows][cols].x = x1 + (tileInfo[rows][cols].w * cols) + 5;
+			tileInfo[rows][cols].y = y1 + (tileInfo[rows][cols].h * rows) + 5;
 		}
 	}
 
