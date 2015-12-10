@@ -86,11 +86,15 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 			tileInfo[rows][cols].y = y1 + (tileHeight * rows);
 		}
 	}
+
+	bool keepRunning = true;
+
 	do{
 		std::vector<std::pair<int, int>> tileLoc = tileAnalyzer(imageSubtracted);	//Find where new tiles are placed
 
 		if (tileLoc.empty()){	
 			returnVector[1] = 1;
+			keepRunning = false;
 			return(returnVector);
 		}
 
@@ -119,18 +123,20 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 				else {
 					std::cout << "\nThat is a real word.";
 					returnVector[0] = placeTiles(tileLoc, input);
+					keepRunning = false;
 					return(returnVector);
 				}
 			}
 			else {
 				returnVector[0] = placeTiles(tileLoc, input);
+				keepRunning = false;
 				return(returnVector);
 			}
 		}
 		else {
 			std::cout << "\nInvalid placement.";
 		}
-	} while (true);
+	} while ( keepRunning == true);
 
 }
 
