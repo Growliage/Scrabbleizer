@@ -47,7 +47,7 @@ cv::Mat resizeImage(cv::Mat image)
 	}
 	for (int y = 0; y < image.rows; y++){
 		for (int x = 0; x < image.cols; x++){
-			if (image.at<unsigned char>(y, x) >= 170){
+			if (image.at<unsigned char>(y, x) >= 230){
 				image.at<unsigned char>(y, x) = 255;
 			}
 			else{
@@ -88,7 +88,7 @@ int compareHistograms(cv::Mat image){
 	int cordsZ[64] = { 5, 14, 15, 16, 17, 18, 18, 19, 21, 22, 23, 24, 24, 23, 23, 23, 23, 23, 24, 23, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 31, 31, 31, 31, 31, 31, 30, 10, 11, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 10, 10, 11, 11, 11, 11, 11, 31, 32, 32, 32, 32, 32};
 	//***************************Output Histogram****************************
 	//find the histogram of the input image
-	std::string letters[27] = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "*" };
+	std::string letters[27] = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "?" };
 	int cords[64] = { 0 };
 	for (int y = 0; y < image.rows; y++){
 		for (int x = 0; x < image.cols; x++){
@@ -179,8 +179,8 @@ cv::Mat cropImage(cv::Mat image)
 {
 	std::cout << "rows: "<< image.rows << ", cols: " << image.cols << std::endl;
 	std::vector<cv::Point> points;
-	for (int y = 10; y < image.rows - 10; y++){
-		for (int x = 10; x < image.cols - 10; x++){
+	for (int y = 0; y < image.rows; y++){
+		for (int x = 0; x < image.cols; x++){
 			if (image.at<unsigned char>(y, x) >= 170){
 				points.push_back(cv::Point(x, y));
 			}
@@ -226,7 +226,7 @@ cv::Mat removeNoise(cv::Mat image){
 	//Threshold after resize
 	for (int y = 0; y < image.rows; y++){
 		for (int x = 0; x < image.cols; x++){
-			if (image.at<unsigned char>(y, x) >= 190){
+			if (image.at<unsigned char>(y, x) >= 170){
 				image.at<unsigned char>(y, x) = 0;
 			}
 			else{

@@ -15,8 +15,8 @@ struct TileStruct {
 	char letterTile = '0';	//The letter found at the spcified coordinated
 	int tileValue;	//What kind of (premium) tile is it. Gotten from boardValues
 	int x, y;	//Tiles upper left corner (x,y) coords on the picture
-	double w;	//Used to find the width on a single tile
-	double h;	//Used to find the height of a single tile
+	float w;	//Used to find the width on a single tile
+	float h;	//Used to find the height of a single tile
 } tileInfo[15][15];
 
 std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x4, int y4){
@@ -70,8 +70,8 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 
 	for (int i = 0; i < 15; i++){
 		for (int j = 0; j < 15; j++){
-				tileInfo[i][j].w = (x4 - x1) / 15;
-				tileInfo[i][j].h = (y4 - y1) / 15;
+				tileInfo[i][j].w = (float)(x4 - x1) / 15;
+				tileInfo[i][j].h = (float)(y4 - y1) / 15;
 			tileInfo[i][j].tileValue = boardValues[i][j];
 		}
 	}
@@ -152,7 +152,7 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 
 std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted){
 
-	float threshold = 0.15;	//Threshold for when a location needs to be noted
+	float threshold = 0.10;	//Threshold for when a location needs to be noted
 
 	std::vector<std::pair<int, int>> tileLoc;
 	int totalPixelsinStruct = tileInfo[0][0].w * tileInfo[0][0].h;
