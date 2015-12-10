@@ -18,7 +18,14 @@ struct TileStruct {
 	int h;	//Used to find the height of a single tile
 } tileInfo[15][15];
 
-int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x4, int y4){
+std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x4, int y4){
+
+	std::vector<int> returnVector;
+	returnVector.at[0] = 0;	//Points (if any) awarded
+	returnVector.at[1] = 0;	//Did the player skip their turn(1 true, 0 false)
+	returnVector.at[2] = 0; //Was the word contested?
+	returnVector.at[3] = 0; //If it was contested, which player was it?
+	returnVector.at[4] = 0; //Was it successfully contested?
 
 	/*Forward declarations*/
 	//Tile manipulators
@@ -79,50 +86,50 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x4, int
 			tileInfo[rows][cols].y = y1 + (tileHeight * rows);
 		}
 	}
-
 	do{
-		//Draw the board
-		for (int rows = 0; rows < 15; rows++){
-			for (int cols = 0; cols < 15; cols++){
-				cv::rectangle(image,
-					cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y), //Point 1
-					cv::Point(tileInfo[rows][cols].x + tileInfo[rows][cols].w, tileInfo[rows][cols].y + tileInfo[rows][cols].h), //point 2
-					CV_RGB(0, 255, 255), 1);
-			}
-		}
 		std::vector<std::pair<int, int>> tileLoc = tileAnalyzer(imageSubtracted);	//Find where new tiles are placed
+
+		if (tileLoc.empty()){	
+			returnVector.at[1] = 1;
+			return(returnVector);
+		}
+
 		std::string input = tileCropper(image, tileLoc);	//Have tileCropper send individual letters to letterRecognition
 
 		if (checkTiles(tileLoc, input) == true){	//Preliminary check to see if tiles are placed according to the rules
 
-			std::cout << "\nThe word played is" << input << ". Input \"C\" to contest.";
+			std::cout << "\nThe word played is" << input << ". Type \"C\" to contest.";
 			std::string playerInput;
 			std::cin >> playerInput;
 
 			if (playerInput == "c" || "C"){
+				returnVector.at[2] = 1;
+				std::cout << "\nWhich player is contesting the word?" << std::endl;
+				int player;
+				std::cin >> player;
+				returnVector.at[3] = player;
 				bool validWord = SOWPODSsearch(input);
 
 				if (validWord == false){
 					std::cout << "\nThe word does not exist! Please remove the tiles.";
+					returnVector.at[4] = 1;
 					removeTiles(tileLoc);
-					return(0);
+
 				}
 				else {
 					std::cout << "\nThat is a real word.";
-					return(placeTiles(tileLoc, input));
+					returnVector.at[0] = placeTiles(tileLoc, input);
+					return(returnVector);
 				}
 			}
 			else {
-				return(placeTiles(tileLoc, input));
+				returnVector.at[0] = placeTiles(tileLoc, input);
+				return(returnVector);
 			}
 		}
 		else {
 			std::cout << "\nInvalid placement.";
 		}
-
-
-
-		return(1);
 	} while (true);
 
 }

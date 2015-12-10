@@ -8,9 +8,10 @@ cv::Mat histogramequalization(cv::Mat image);
 cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage, int threshold);
 cv::Mat sumFilter(cv::Mat inImage, cv::Mat outImage, int threshold);
 cv::Mat ColourThres(cv::Mat inImage);
-int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int y1, int x4, int y4); 
 int homogX(int x, int y);
 int homogY(int x, int y);
+std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int y1, int x4, int y4);
+/*(VSBoard)NOTE: Index 0 = points awarded, 1 = skippedTurn(bool), 2 = contested(bool), 3 = contesting player(1 - 4), 4 = contest successful(bool)*/
 
 int changeTurn(int players, int x1, int y1,int x4, int y4){
 	cv::Mat frame, beforeTurn, afterTurn, temp;
@@ -64,7 +65,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 			}
 
 			imshow("homogImage",homogImage);
-			addPoints = VSBoard(afterTurn, homogImage, x1, y1, x4, y4);
+			addPoints = VSBoard(afterTurn, homogImage, x1, y1, x4, y4).at[0];
 
 			imshow("letters", temp);
 			imshow("sumThreshold", outImage);
@@ -101,7 +102,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
-			addPoints = VSBoard(afterTurn, outImage, __argc, __argc, __argc, __argc);
+			addPoints = VSBoard(afterTurn, outImage, x1, y1, x4, y4).at[0];
 
 			imshow("letters", temp);
 			imshow("sumThreshold", outImage);
@@ -138,7 +139,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
-			addPoints = VSBoard(afterTurn, outImage, __argc, __argc, __argc, __argc);
+			addPoints = VSBoard(afterTurn, outImage, x1, y1, x4, y4).at[0];
 
 			imshow("sumThreshold", outImage);
 
@@ -173,7 +174,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
-			addPoints = VSBoard(afterTurn, outImage, __argc, __argc, __argc, __argc);
+			addPoints = VSBoard(afterTurn, outImage, x1, y1, x4, y4).at[0];
 
 			imshow("letters", temp);
 			imshow("sumThreshold", outImage);
