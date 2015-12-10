@@ -15,8 +15,8 @@ struct TileStruct {
 	char letterTile = '0';	//The letter found at the spcified coordinated
 	int tileValue;	//What kind of (premium) tile is it. Gotten from boardValues
 	int x, y;	//Tiles upper left corner (x,y) coords on the picture
-	int w;	//Used to find the width on a single tile
-	int h;	//Used to find the height of a single tile
+	double w;	//Used to find the width on a single tile
+	double h;	//Used to find the height of a single tile
 } tileInfo[15][15];
 
 std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x4, int y4){
@@ -66,22 +66,12 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 		{ 5, 1, 1, 2, 1, 1, 1, 5, 1, 1, 1, 2, 1, 1, 5 }		//O
 	};
 
-	bool roundSwitch = false;
+
 
 	for (int i = 0; i < 15; i++){
 		for (int j = 0; j < 15; j++){
-
-			if (roundSwitch == false){
-				tileInfo[i][j].w = ceil((x4 - x1) / 15);
-				tileInfo[i][j].h = ceil((y4 - y1) / 15);
-				roundSwitch = true;
-			}
-			else {
-				tileInfo[i][j].w = floor((x4 - x1) / 15);
-				tileInfo[i][j].h = floor((y4 - y1) / 15);
-				roundSwitch = false;
-			}
-
+				tileInfo[i][j].w = (x4 - x1) / 15;
+				tileInfo[i][j].h = (y4 - y1) / 15;
 			tileInfo[i][j].tileValue = boardValues[i][j];
 		}
 	}
@@ -162,7 +152,7 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 
 std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted){
 
-	float threshold = 0.25;	//Threshold for when a location needs to be noted
+	float threshold = 0.15;	//Threshold for when a location needs to be noted
 
 	std::vector<std::pair<int, int>> tileLoc;
 	int totalPixelsinStruct = tileInfo[0][0].w * tileInfo[0][0].h;

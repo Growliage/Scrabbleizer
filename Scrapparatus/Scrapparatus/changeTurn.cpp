@@ -55,7 +55,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 			cv::Mat outImage = temp.clone();
 			cv::Mat grayAfterImage = afterTurn.clone();
 			sumFilter(temp, outImage, sumThreshold);
-
+			/*
 			cv::Mat homogImage = temp.clone();
 			for (int i = 15; i < outImage.rows-15; i++){
 				for (int j = 50; j < outImage.cols-50; j++){
@@ -65,13 +65,13 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 					grayAfterImage.at<unsigned char>(y, x) = afterTurn.at<unsigned char>(i, j);
 				}
 			}
+			*/
+			addPoints = VSBoard(afterTurn, outImage, x1, y1, x4, y4)[0];
 
-			imshow("homogImage",homogImage);
-			addPoints = VSBoard(grayAfterImage, homogImage, x1, y1, x4, y4)[0];
 
-			//imshow("letters", outImage);
-			imshow("sumThreshold", homogImage);
-			imshow("afterTurn", grayAfterImage);
+			imshow("letters", outImage);
+			//imshow("sumThreshold", homogImage);
+			imshow("afterTurn", afterTurn);
 
 			key = cv::waitKey(0);
 			if (key == 108){

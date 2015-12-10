@@ -206,14 +206,16 @@ int main(int, char)
 		y4 = scrabbleBoard[3].second;
 
 
-		//homography(x1, y1, x2, y2, x3, y3, x4, y4, cv::Point(120, 30), cv::Point(frame.cols - 100, frame.rows - 20));
-		homography(x1, y1, x2, y2, x3, y3, x4, y4, cv::Point(150, 50), cv::Point(520, 420));
-
 		int pfbx1 = 120;
 		int pfby1 = 30;
 
 		int pfbx4 = 520;
 		int pfby4 = 420;
+		
+		//homography(x1, y1, x2, y2, x3, y3, x4, y4, cv::Point(120, 30), cv::Point(frame.cols - 100, frame.rows - 20));
+		homography(x1, y1, x2, y2, x3, y3, x4, y4, cv::Point(150, 50), cv::Point(pfbx4, pfby4));
+
+		
 
 		changeTurn(__argc, 150, 50, pfbx4, pfby4);
 
