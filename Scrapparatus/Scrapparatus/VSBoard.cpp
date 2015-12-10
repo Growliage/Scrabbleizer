@@ -46,7 +46,9 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 	bool SOWPODSsearch(std::string input);
 
 	//Setting up the tiles
+	int width = x4 - x1;
 	int tileWidth = (x4 - x1) / 15;
+	std::cout << width << "    " << tileWidth << std::endl;
 	int tileHeight = (y4 - y1) / 15;
 
 	//Values used by the pointCounter()
@@ -97,7 +99,6 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 		}
 	}
 
-	imshow("Grid overlay", image);
 
 	bool keepRunning = true;
 
@@ -154,7 +155,7 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 
 std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted){
 
-	float threshold = 0.1;	//Threshold for when a location needs to be noted
+	float threshold = 0.25;	//Threshold for when a location needs to be noted
 
 	std::vector<std::pair<int, int>> tileLoc;
 	int totalPixelsinStruct = tileInfo[0][0].w * tileInfo[0][0].h;
@@ -165,7 +166,7 @@ std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted){
 			int pixelsCounter = 0;
 			for (int tileRows = tileInfo[structRow][structCol].x; tileRows < tileInfo[structRow][structCol].x + tileInfo[structRow][structCol].w; tileRows++){
 				for (int tileCols = tileInfo[structRow][structCol].y; tileCols < tileInfo[structRow][structCol].y + tileInfo[structRow][structCol].h; tileCols++){
-					std::cout << tileRows << "   " << tileCols << std::endl;
+					
 					if ((imageSubtracted.at<unsigned char>(tileCols, tileRows) > 128)){
 						pixelsCounter++;
 					}
@@ -173,7 +174,8 @@ std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted){
 			}	//tile rows
 
 			if (((float)pixelsCounter / (float)totalPixelsinStruct) > threshold){
-				tileLoc.push_back(std::make_pair(structCol, structRow));
+				tileLoc.push_back(std::make_pair(structRow, structCol));
+
 			}
 
 		}	//Cols on image
@@ -198,7 +200,7 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 		int y = tileInfo[tileLoc[i].first][tileLoc[i].second].y;
 		int w = tileInfo[tileLoc[i].first][tileLoc[i].second].w;
 		int h = tileInfo[tileLoc[i].first][tileLoc[i].second].h;
-		imageROI = image(cv::Rect(y, x, w, h));
+		imageROI = image(cv::Rect(x, y, w, h));
 		imageROI.copyTo(imageSlice);
 		imshow("slice", imageSlice);
 		cv::waitKey(0);

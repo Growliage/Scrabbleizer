@@ -53,6 +53,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
+			cv::Mat grayAfterImage = afterTurn.clone();
 			sumFilter(temp, outImage, sumThreshold);
 
 			cv::Mat homogImage = temp.clone();
@@ -60,16 +61,17 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 				for (int j = 50; j < outImage.cols-50; j++){
 					int y = homogY(j, i);
 					int x = homogX(j, i);
-					homogImage.at<uchar>(y, x) =  outImage.at<uchar>(i,j);
+					homogImage.at<unsigned char>(y, x) =  outImage.at<unsigned char>(i,j);
+					grayAfterImage.at<unsigned char>(y, x) = afterTurn.at<unsigned char>(i, j);
 				}
 			}
 
 			imshow("homogImage",homogImage);
-			addPoints = VSBoard(afterTurn, homogImage, x1, y1, x4, y4)[0];
+			addPoints = VSBoard(grayAfterImage, homogImage, x1, y1, x4, y4)[0];
 
-			imshow("letters", temp);
-			imshow("sumThreshold", outImage);
-			imshow("afterTurn", afterTurn);
+			//imshow("letters", outImage);
+			imshow("sumThreshold", homogImage);
+			imshow("afterTurn", grayAfterImage);
 
 			key = cv::waitKey(0);
 			if (key == 108){
@@ -82,7 +84,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 				}*/
 			}
 			points.at<int>(0) = points.at<int>(0) + addPoints; //add the points
-			std::cout << "P1 receives " << counter << " points.\n"; //Shows how many points the player is given
+			std::cout << "P1 receives " << addPoints << " points.\n"; //Shows how many points the player is given
 		}
 		else if (turn == 1){
 			std::cout << "P2's turn.\n";
@@ -119,7 +121,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 				}*/
 			}
 			points.at<int>(1) = points.at<int>(1) + addPoints;
-			std::cout << "P2 receives " << counter << " points.\n";
+			std::cout << "P2 receives " << addPoints << " points.\n";
 		}
 		else if (turn == 2){
 			std::cout << "P3's turn.\n";
@@ -154,7 +156,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 				}*/
 			}
 			points.at<int>(2) = points.at<int>(2) + addPoints;
-			std::cout << "P3 receives " << counter << " points.\n";
+			std::cout << "P3 receives " << addPoints << " points.\n";
 		}
 		else {
 			std::cout << "P4's turn.\n";
@@ -191,7 +193,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 				}*/
 			}
 			points.at<int>(3) = points.at<int>(3) + addPoints;
-			std::cout << "P4 receives " << counter << " points.\n";
+			std::cout << "P4 receives " << addPoints << " points.\n";
 		}
 		turn++; //Count the turn up to signify it's a new player's turn
 		if (turn > nmbOfPlayers - 1){ //There can only be four players so it should reset if it goes above that

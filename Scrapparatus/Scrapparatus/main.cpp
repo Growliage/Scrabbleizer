@@ -143,11 +143,12 @@ int main(int, char)
 		capture >> firstFrame;
 
 		cv::waitKey(0);
-		std::cout << " Place the board so that it is withind the border shown on the screen, the word Scrabble should be at the buttom of the green square. After this is done press anykey three times to continue " << std::endl;
+		std::cout << " Place the board grid so that it is withind the border shown on the screen, the word Scrabble should be at the buttom of the screen. After this is done press anykey three times to continue " << std::endl;
 		for (;;)
 		{
 			capture >> frame; // get a new frame from camera
-			rectangle(frame, cvPoint(120, 30), cvPoint(frame.cols - 100, frame.rows - 20), CV_RGB(50, 255, 0), 2);
+			//rectangle(frame, cvPoint(120, 30), cvPoint(frame.cols - 100, frame.rows - 20), CV_RGB(50, 255, 0), 2);
+			rectangle(frame, cvPoint(150, 50), cvPoint(520, 420), CV_RGB(0, 20, 255), 2);
 			imshow("image", frame);
 			if (cv::waitKey(30) >= 0)
 				break;
@@ -176,7 +177,7 @@ int main(int, char)
 				}
 			}
 		}
-		//imshow("image", backGroundSubtraction);
+		
 		GaussianBlur(backGroundSubtraction, backGroundSubtraction, cv::Size(7, 7), 1.5, 1.5);
 		Canny(backGroundSubtraction, backGroundSubtraction, 15, 30, 3);
 		imshow("bgs", backGroundSubtraction);
@@ -194,7 +195,6 @@ int main(int, char)
 			cv::circle(startingImage, cv::Point(x, y),4,cv::Scalar(0,25,255),2);
 			std::cout << "x = " << x << " y = " << y << std::endl;
 		}
-		imshow("startingImage", startingImage);
 
 		x1 = scrabbleBoard[0].first;
 		y1 = scrabbleBoard[0].second;
@@ -206,15 +206,16 @@ int main(int, char)
 		y4 = scrabbleBoard[3].second;
 
 
-		homography(x1, y1, x2, y2, x3, y3, x4, y4, cv::Point(120, 30), cv::Point(frame.cols - 100, frame.rows - 20));
+		//homography(x1, y1, x2, y2, x3, y3, x4, y4, cv::Point(120, 30), cv::Point(frame.cols - 100, frame.rows - 20));
+		homography(x1, y1, x2, y2, x3, y3, x4, y4, cv::Point(150, 50), cv::Point(520, 420));
 
 		int pfbx1 = 120;
 		int pfby1 = 30;
 
-		int pfbx4 = frame.cols - 100;
-		int pfby4 = frame.rows - 20;
+		int pfbx4 = 520;
+		int pfby4 = 420;
 
-		changeTurn(__argc, 120, 30, pfbx4, pfby4);
+		changeTurn(__argc, 150, 50, pfbx4, pfby4);
 
 		runOnce = false;
 	} while(runOnce == true);
