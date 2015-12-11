@@ -187,6 +187,7 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 	//Forward declaration
 	std::string letterRecognition(cv::Mat imageSlice);
 	cv::Mat factorScaling(float Sx, float Sy, cv::Mat imageIn);	//Hail Mary! Let's hope this works.
+	void FindBlobs(const cv::Mat &binary, std::vector < std::vector<cv::Point2i> > &blobs);
 
 	float Sf = 6;	//Factor to scale the image by
 	cv::Mat imageSlice;	//The image to send to letter recognition
@@ -201,10 +202,17 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 		int h = tileInfo[tileLoc[i].first][tileLoc[i].second].h;
 		imageROI = image(cv::Rect(x, y, w, h));
 		imageROI.copyTo(imageSlice);
-		imshow("slice", imageSlice);
+		//imshow("slice", imageSlice);
+
+		std::vector < std::vector<cv::Point2i> > blobs;
+
+		FindBlobs(imageSlice, blobs);
+		imshow("blob", imageSlice);
 		cv::waitKey(0);
 
-		std::string tempString = letterRecognition(factorScaling(Sf,Sf,imageSlice));
+
+
+		std::string tempString = letterRecognition(imageSlice);
 
 		if (tempString == "Error"){
 			sWord.append("?");
