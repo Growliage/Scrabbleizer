@@ -29,14 +29,7 @@ bool SOWPODSsearch(std::string input){
 
 		std::cout << "Dictionary has been loaded." << std::endl;
 
-		for (int i = 0; i < input.length(); i++){
-			if (input.at(i) == '?'){
-				std::cout << "\nWhat is letter number " << i << "?" << std::endl;
-				char letter;
-				std::cin >> letter;
-				input.at(i) = letter;
-			}
-		}
+
 
 		return(binarySearch(lines, input));
 

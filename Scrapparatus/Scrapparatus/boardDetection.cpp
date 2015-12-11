@@ -146,6 +146,9 @@ for (int i = 0; i < firstPoint.size(); i++)
 //segment intersections to 1ind board
 int topLineLength = img_edge.cols * 0.80; // line threshold % of screen
 int MaxLineLength = img_edge.cols * 0.90;
+
+//int topLineLength = 365; // line threshold % of screen
+//int MaxLineLength = 375;
 std::vector< std::pair<int, int>> board;
 
 for (int i = 0; i < intersections.size(); i++)

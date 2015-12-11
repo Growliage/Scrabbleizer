@@ -33,7 +33,6 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 
 		//std::thread second(VSBoard(image, imageSubtracted)); //Pass a regular and an image subtracted image
 
-		int counter = rand() % 100; //This is is just a placeholder for the point counting class/program
 		if (turn == 0){ //Checking for whose turn it is
 			std::cout << "P1's turn.\n"; //Shows whose turn it is
 			capture >> beforeTurn;
@@ -55,8 +54,8 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 			cv::Mat outImage = temp.clone();
 			cv::Mat grayAfterImage = afterTurn.clone();
 			sumFilter(temp, outImage, sumThreshold);
-			/*
-			cv::Mat homogImage = temp.clone();
+			
+		/*	cv::Mat homogImage = temp.clone();
 			for (int i = 15; i < outImage.rows-15; i++){
 				for (int j = 50; j < outImage.cols-50; j++){
 					int y = homogY(j, i);
@@ -64,14 +63,10 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 					homogImage.at<unsigned char>(y, x) =  outImage.at<unsigned char>(i,j);
 					grayAfterImage.at<unsigned char>(y, x) = afterTurn.at<unsigned char>(i, j);
 				}
-			}
-			*/
-			addPoints = VSBoard(afterTurn, outImage, x1, y1, x4, y4)[0];
-
-
+			}*/
+			
 			imshow("letters", outImage);
-			//imshow("sumThreshold", homogImage);
-			imshow("afterTurn", afterTurn);
+			addPoints = VSBoard(afterTurn/*afterTurn*/, outImage/*outImage*/, x1, y1, x4, y4)[0];
 
 			key = cv::waitKey(0);
 			if (key == 108){
@@ -97,18 +92,29 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 			capture >> afterTurn;
 			imshow(" before", beforeTurn);
 			std::cout << "capture after" << std::endl;
+
 			beforeTurn = ColourThres(beforeTurn);
+
 			cvtColor(beforeTurn, beforeTurn, CV_BGR2GRAY);
 			cvtColor(afterTurn, afterTurn, CV_BGR2GRAY);
 
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
+			cv::Mat grayAfterImage = afterTurn.clone();
 			sumFilter(temp, outImage, sumThreshold);
-			addPoints = VSBoard(afterTurn, outImage, x1, y1, x4, y4)[0];
 
-			imshow("letters", temp);
-			imshow("sumThreshold", outImage);
-			imshow("afterTurn", afterTurn);
+			/*	cv::Mat homogImage = temp.clone();
+			for (int i = 15; i < outImage.rows-15; i++){
+			for (int j = 50; j < outImage.cols-50; j++){
+			int y = homogY(j, i);
+			int x = homogX(j, i);
+			homogImage.at<unsigned char>(y, x) =  outImage.at<unsigned char>(i,j);
+			grayAfterImage.at<unsigned char>(y, x) = afterTurn.at<unsigned char>(i, j);
+			}
+			}*/
+
+			imshow("letters", outImage);
+			addPoints = VSBoard(afterTurn/*afterTurn*/, outImage/*outImage*/, x1, y1, x4, y4)[0];
 
 			key = cv::waitKey(0);
 			if (key == 108){

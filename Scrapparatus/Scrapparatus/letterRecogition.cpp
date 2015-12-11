@@ -47,7 +47,7 @@ cv::Mat resizeImage(cv::Mat image)
 	}
 	for (int y = 0; y < image.rows; y++){
 		for (int x = 0; x < image.cols; x++){
-			if (image.at<unsigned char>(y, x) >= 230){
+			if (image.at<unsigned char>(y, x) >= 240){
 				image.at<unsigned char>(y, x) = 255;
 			}
 			else{
@@ -181,7 +181,7 @@ cv::Mat cropImage(cv::Mat image)
 	std::vector<cv::Point> points;
 	for (int y = 0; y < image.rows; y++){
 		for (int x = 0; x < image.cols; x++){
-			if (image.at<unsigned char>(y, x) >= 170){
+			if (image.at<unsigned char>(y, x) >= 180){
 				points.push_back(cv::Point(x, y));
 			}
 		}
@@ -235,8 +235,7 @@ cv::Mat removeNoise(cv::Mat image){
 		}
 	}
 	cv::Mat element = getStructuringElement(cv::MORPH_RECT,
-		cv::Size(9, 9),
-		cv::Point(4, 4));
+		cv::Size(3, 3));
 	erode(image, image, element);
 	dilate(image, image, element);
 	//imshow("after closing", image);

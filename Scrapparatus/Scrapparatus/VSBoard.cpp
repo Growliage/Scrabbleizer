@@ -188,7 +188,7 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 	std::string letterRecognition(cv::Mat imageSlice);
 	cv::Mat factorScaling(float Sx, float Sy, cv::Mat imageIn);	//Hail Mary! Let's hope this works.
 
-	float Sf = 2;	//Factor to scale the image by
+	float Sf = 6;	//Factor to scale the image by
 	cv::Mat imageSlice;	//The image to send to letter recognition
 	cv::Mat imageROI;	//The region of interest that needs to be sliced
 	std::string sWord = "";	
@@ -211,6 +211,15 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 		}
 		else {
 			sWord.append(tempString);
+		}
+	}
+
+	for (int i = 0; i < sWord.length(); i++){
+		if (sWord.at(i) == '?'){
+			std::cout << "\nWhat is letter number " << i << "?" << std::endl;
+			char letter;
+			std::cin >> letter;
+			sWord.at(i) = letter;
 		}
 	}
 	cv::destroyAllWindows;
