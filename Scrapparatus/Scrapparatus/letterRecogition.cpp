@@ -14,7 +14,7 @@ std::string letterRecognition(cv::Mat image);
 cv::Mat cropImage(cv::Mat image);
 
 std::string letterRecognition(cv::Mat image){
-	imshow("asd", image);
+	//imshow("asd", image);
 	std::string letters[27] = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "*" };
 	cv::Mat imgDivide = image.clone();
 	imgDivide = removeNoise(image);
@@ -241,7 +241,7 @@ cv::Mat removeNoise(cv::Mat image){
 	//imshow("after closing", image);
 
 	image = cropImage(image);
-	imshow("after crop", image);
+	//imshow("after crop", image);
 
 	return image;
 }

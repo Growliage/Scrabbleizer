@@ -27,7 +27,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 	std::cout << nmbOfPlayers << " playing.\n";
 	cv::waitKey(0); //to make sure that p1 has played a word before it starts
 	while (endGame == false){
-		cv::VideoCapture capture(1);
+		cv::VideoCapture capture(0);
 		if (!capture.isOpened())
 			return -1;
 

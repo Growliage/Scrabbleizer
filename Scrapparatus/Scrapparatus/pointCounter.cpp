@@ -35,22 +35,22 @@ int pointCounter(std::string input, std::vector<int> premiumTiles, bool allTiles
 
 	for (unsigned i = 0; i <= input.length() - 1; i++){
 		if (premiumTiles.at(i) == 4){
-			doubleWord = doubleWord + 1;
+			doubleWord = doubleWord++;
 		}
 		else if (premiumTiles.at(i) == 5){
-			tripleWord = tripleWord + 1;
+			tripleWord = tripleWord++;
 		} else
-		totalPoints = totalPoints + (pointValue[input.at(i)]*premiumTiles.at(i));
+		totalPoints = totalPoints + (pointValue[input.at(i) + 1]*premiumTiles.at(i));
 		}
 
 	while (doubleWord != 0){
 		totalPoints = totalPoints * 2;
-		doubleWord = doubleWord - 1;
+		doubleWord = doubleWord--;
 	}
 
 	while (tripleWord != 0){
 		totalPoints = totalPoints * 3;
-		tripleWord = tripleWord - 1;
+		tripleWord = tripleWord--;
 	}
 
 	if (allTiles == true){

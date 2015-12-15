@@ -33,7 +33,6 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 	std::vector<std::pair<int, int>> checkTiles(int startX, int startY, int wordLength);
 	int placeTiles(std::string input, std::vector<std::pair<int, int>> coords);
 	void removeTiles(std::vector<std::pair<int, int>>);
-	bool hori(std::vector<std::pair<int, int>> tileLoc);
 
 	//Image manipulators
 	std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted);
@@ -87,16 +86,6 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 	}
 
 
-	for (int rows = 0; rows < 15; rows++){
-		for (int cols = 0; cols < 15; cols++){
-			cv::rectangle(image,
-				cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y), //Point 1
-				cv::Point(tileInfo[rows][cols].x + tileInfo[rows][cols].w, tileInfo[rows][cols].y + tileInfo[rows][cols].h), //point 2
-				CV_RGB(0, 255, 255), 1);
-		}
-	}
-
-
 	bool keepRunning = true;
 
 	do{
@@ -116,7 +105,7 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 			std::string playerInput;
 			std::cin >> playerInput;
 
-			if (playerInput == "c" || "C"){
+			if (playerInput.compare("c") == 0 || playerInput.compare("C") == 0){
 				returnVector[2] = 1;
 				std::cout << "\nWhich player is contesting the word?" << std::endl;
 				int player;
@@ -146,6 +135,20 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 		else {
 			std::cout << "\nInvalid placement.";
 		}
+
+		//Draw the virtual board
+		//cv::Mat currentBoard(image.rows, image.cols, CV_8UC1, cv::Scalar::zeros);
+		//imshow("Board", currentBoard);
+
+		for (int rows = 0; rows < 15; rows++){
+			for (int cols = 0; cols < 15; cols++){
+				cv::rectangle(image,
+					cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y), //Point 1
+					cv::Point(tileInfo[rows][cols].x + tileInfo[rows][cols].w, tileInfo[rows][cols].y + tileInfo[rows][cols].h), //point 2
+					CV_RGB(255, 255, 255), 1);
+			}
+		}
+
 	} while ( keepRunning == true);
 
 }
@@ -187,13 +190,13 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 	//Forward declaration
 	std::string letterRecognition(cv::Mat imageSlice);
 	cv::Mat factorScaling(float Sx, float Sy, cv::Mat imageIn);	//Hail Mary! Let's hope this works.
-	std::vector < std::vector<cv::Point2i> > FindBlobs(const cv::Mat &binary, std::vector < std::vector<cv::Point2i> > &blobs);
+	//std::vector < std::vector<cv::Point2i> > FindBlobs(const cv::Mat &binary, std::vector < std::vector<cv::Point2i> > &blobs);
 
 	float Sf = 6;	//Factor to scale the image by
 	cv::Mat imageSlice;	//The image to send to letter recognition
 	cv::Mat imageROI;	//The region of interest that needs to be sliced
 	std::string sWord = "";	
-	imshow("Full image", image);
+	//imshow("Full image", image);
 
 	for (int i = 0; i < tileLoc.size(); i++){
 		int x = tileInfo[tileLoc[i].first][tileLoc[i].second].x;
@@ -204,10 +207,6 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 		imageROI.copyTo(imageSlice);
 		//imshow("slice", imageSlice);
 
-		std::vector < std::vector<cv::Point2i> > blobs;
-
-		blobs = FindBlobs(imageSlice, blobs);
-		imshow("blob", imageSlice);
 		cv::waitKey(0);
 
 
@@ -287,6 +286,7 @@ int placeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
 			tilesPlayed++;
 		}
 		premiumTiles.push_back(tileInfo[tileLoc[i].first][tileLoc[i].second].tileValue);	//Get the premium values for point counting
+		
 		tileInfo[tileLoc[i].first][tileLoc[i].second].letterTile = input.at(i);	//Set letter at position as a char
 		tileInfo[tileLoc[i].first][tileLoc[i].second].cvLetterTile = input.at(i);	//Set letter at position as cvString. Used to draw the board
 

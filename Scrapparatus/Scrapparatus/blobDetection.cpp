@@ -6,7 +6,7 @@
 
 
 
-void FindBlobs(const cv::Mat &binary, std::vector < std::vector<cv::Point2i> > &blobs)
+std::vector < std::vector<cv::Point2i> >FindBlobs(const cv::Mat &binary, std::vector < std::vector<cv::Point2i> > &blobs)
 {
 	blobs.clear();
 
@@ -48,5 +48,6 @@ void FindBlobs(const cv::Mat &binary, std::vector < std::vector<cv::Point2i> > &
 			label_count++;
 		}
 	}
+	return(blobs);
 }
 
