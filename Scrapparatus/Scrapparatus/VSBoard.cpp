@@ -9,7 +9,6 @@
 
 //Structs array used for initialization
 struct TileStruct {
-	bool newTile = false;	//Was the tile played this turn?
 	bool playablePos = false;	//Is it a playable position?
 	char letterTile = '0';	//The letter found at the spcified coordinated
 	int tileValue;	//What kind of (premium) tile is it. Gotten from boardValues
@@ -34,7 +33,6 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x4, int
 	//Board manipulators
 	bool checkTiles(std::vector<std::pair<int, int>> tileLoc, std::string input);
 	int placeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input);
-	void removeTiles(std::vector<std::pair<int, int>> tileLoc);
 	bool SOWPODSsearch(std::string input);
 
 	//Values used by the pointCounter()
@@ -233,15 +231,9 @@ int placeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
 	bool allTiles = false;
 	std::vector<int> premiumTiles;
 
-	for (int i = 0; i < 15; i++){	//Lock in all tiles on the board
-		for (int j = 0; j < 15; j++){
-			tileInfo[i][j].newTile = false;
-		}
-	}
 
 	for (int i = 0; i < tileLoc.size(); i++){
 		if (tileInfo[tileLoc[i].first][tileLoc[i].second].letterTile == '0'){	//Check if a tile is played on an empty spot
-			tileInfo[tileLoc[i].first][tileLoc[i].second].newTile = true;	//Set position as newly played tile to allow for removing
 			tilesPlayed++;
 		}
 		premiumTiles.push_back(tileInfo[tileLoc[i].first][tileLoc[i].second].tileValue);	//Get the premium values for point counting
@@ -261,19 +253,5 @@ int placeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
 	}
 
 	return(pointCounter(input, premiumTiles, allTiles));
-
-}
-
-void removeTiles(std::vector<std::pair<int, int>> tileLoc){
-
-
-	for (int i = 0; i < 15; i++){	
-		for (int j = 0; j < 15; j++){
-			if (tileInfo[i][j].newTile == true){	//Remove the tile
-				tileInfo[i][j].letterTile = '0';
-				tileInfo[i][j].newTile = false;
-			}
-		}
-	}
 
 }
