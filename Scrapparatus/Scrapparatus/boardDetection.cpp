@@ -147,8 +147,6 @@ for (int i = 0; i < firstPoint.size(); i++)
 int topLineLength = img_edge.cols * 0.80; // line threshold % of screen
 int MaxLineLength = img_edge.cols * 0.90;
 
-//int topLineLength = 365; // line threshold % of screen
-//int MaxLineLength = 375;
 std::vector< std::pair<int, int>> board;
 
 for (int i = 0; i < intersections.size(); i++)
@@ -163,8 +161,7 @@ for (int i = 0; i < intersections.size(); i++)
 		//find length of a
 		int a2 = abs(((ipx - jpx)*(ipx - jpx)) + ((ipy - jpy)*(ipy - jpy)));
 		int a = sqrt(a2);
-
-		//if (a < LL + pl && a > LL - pl)
+		
 		if (a > topLineLength && a < MaxLineLength)
 			for (int k = 2; k < intersections.size(); k++)
 			{
@@ -200,7 +197,7 @@ for (int i = 0; i < intersections.size(); i++)
 							float AngleBCC = ((a*a) + (b*b) - (bbc*bbc)) / (2 * (a*b));
 							float Anglebcc = acos(AngleBCC) * 180.0 / M_PIl;
 							
-							if (Anglebcc < 91 && Anglebcc > 89 && c == a) // instead of length == a if camera is placed above
+							if (Anglebcc < 91 && Anglebcc > 89 && c == a)
 							{
 								//find lendth of d
 								int d2 = abs(((ipx - lpx) * (ipx - lpx)) + ((ipy - lpy)*(ipy - lpy)));
@@ -214,7 +211,7 @@ for (int i = 0; i < intersections.size(); i++)
 									float AngleCDC = ((c*c) + (d*d) - (cdc*cdc)) / (2 * (c*d));
 									float Anglecdc = acos(AngleCDC) * 180.0 / M_PIl;
 
-									if (Anglecdc < 91 && Anglecdc > 89 && d ==b) // instead of length == b if camera is placed above
+									if (Anglecdc < 91 && Anglecdc > 89 && d ==b)
 									{
 										int ADC = ((a*a) + (d*d));
 										int adc = sqrt(ADC);
