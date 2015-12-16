@@ -21,9 +21,6 @@
     <ClCompile Include="boardDetection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="histogramequalization.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="backgroundSubtraction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -39,9 +36,6 @@
     <ClCompile Include="ColourThres.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Dialate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="VSBoard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -52,9 +46,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="binarySearch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="scaling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="letterRecognition.cpp">

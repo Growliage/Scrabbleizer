@@ -16,13 +16,10 @@
     <ClCompile Include="boardDetection.cpp" />
     <ClCompile Include="changeTurn.cpp" />
     <ClCompile Include="ColourThres.cpp" />
-    <ClCompile Include="Dialate.cpp" />
-    <ClCompile Include="histogramequalization.cpp" />
     <ClCompile Include="homography.cpp" />
     <ClCompile Include="letterRecognition.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pointCounter.cpp" />
-    <ClCompile Include="scaling.cpp" />
     <ClCompile Include="SOWPODSsearchBinary.cpp" />
     <ClCompile Include="sumFilter.cpp" />
     <ClCompile Include="VSBoard.cpp" />

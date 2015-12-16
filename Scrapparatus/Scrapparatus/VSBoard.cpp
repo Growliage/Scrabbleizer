@@ -23,7 +23,6 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x4, int
 	//Tile manipulators
 	std::vector<std::pair<int, int>> checkTiles(int startX, int startY, int wordLength);
 	int placeTiles(std::string input, std::vector<std::pair<int, int>> coords);
-	void removeTiles(std::vector<std::pair<int, int>>);
 
 	//Image manipulators
 	std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted);
@@ -96,7 +95,6 @@ int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x4, int
 
 				if (validWord == false){
 					std::cout << "\nThe word does not exist! Please remove the tiles.";
-					removeTiles(tileLoc);
 					return(0);
 
 				}
@@ -154,9 +152,7 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 
 	//Forward declaration
 	std::string letterRecognition(cv::Mat imageSlice);
-	cv::Mat factorScaling(float Sx, float Sy, cv::Mat imageIn);
 
-	float Sf = 6;	//Factor to scale the image by
 	cv::Mat imageSlice;	//The image to send to letter recognition
 	cv::Mat imageROI;	//The region of interest that needs to be sliced
 	std::string sWord = "";	
