@@ -1,10 +1,6 @@
 #include "opencv2/opencv.hpp"
 
 
-//using namespace cv;
-//using namespace std;
-
-cv::Mat histogramequalization(cv::Mat image);
 cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage, int threshold);
 cv::Mat sumFilter(cv::Mat inImage, cv::Mat outImage, int threshold);
 cv::Mat ColourThres(cv::Mat inImage);

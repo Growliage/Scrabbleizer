@@ -6,7 +6,6 @@
 #include <vector>
 
 
-cv::Mat histogramequalization(cv::Mat image);
 std::vector<std::pair<int, int>>boardDetection(cv::Mat image);
 cv::Mat BackgroundSubtract(cv::Mat firstFrame, cv::Mat startingImage, int threshold);
 double homography(int,int,int,int,int,int,int,int, cv::Point topLeft, cv::Point bottomRight);
@@ -104,9 +103,6 @@ int main(int, char)
 		//homography(x1, y1, x2, y2, x3, y3, x4, y4, cv::Point(120, 30), cv::Point(frame.cols - 100, frame.rows - 20));
 		homography(x1, y1, x2, y2, x3, y3, x4, y4, cv::Point(150, 50), cv::Point(pfbx4, pfby4));
 
-		
-	//	changeTurn(__argc, 150, 50, x4, y4);
-		//changeTurn(__argc, 150, 50, pfbx4, pfby4);
 
 		runOnce = false;
 	} while(runOnce == true);
@@ -115,7 +111,8 @@ int main(int, char)
 		
 		std::cout << "Choose number of players (1-4)\n";
 		std::cin >> players;
-		(changeTurn(players, 150, 50, pfbx4, pfby4));
+		(changeTurn(players, 150, 50, pfbx4, pfby4)); // used to draw grid based on the perfect board.
+		//(players, 150, 50, x4, y4)); // used to draw the grind based in the board detection.
 		//in changeTurn.pfbx4
 				//letter placement
 				//letter recognition
