@@ -10,7 +10,7 @@ cv::Mat sumFilter(cv::Mat inImage, cv::Mat outImage, int threshold);
 cv::Mat ColourThres(cv::Mat inImage);
 int homogX(int x, int y);
 int homogY(int x, int y);
-std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int y1, int x4, int y4);
+int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int y1, int x4, int y4);
 /*(VSBoard)NOTE: Index 0 = points awarded, 1 = skippedTurn(bool), 2 = contested(bool), 3 = contesting player(1 - 4), 4 = contest successful(bool)*/
 
 int changeTurn(int players, int x1, int y1,int x4, int y4){
@@ -66,7 +66,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 			}*/
 			
 			imshow("letters", outImage);
-			addPoints = VSBoard(afterTurn/*afterTurn*/, outImage/*outImage*/, x1, y1, x4, y4)[0];
+			addPoints = VSBoard(afterTurn/*afterTurn*/, outImage/*outImage*/, x1, y1, x4, y4);
 
 			key = cv::waitKey(0);
 			if (key == 108){
@@ -114,7 +114,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 			}*/
 
 			imshow("letters", outImage);
-			addPoints = VSBoard(afterTurn/*afterTurn*/, outImage/*outImage*/, x1, y1, x4, y4)[0];
+			addPoints = VSBoard(afterTurn/*afterTurn*/, outImage/*outImage*/, x1, y1, x4, y4);
 
 			key = cv::waitKey(0);
 			if (key == 108){
@@ -147,7 +147,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
-			addPoints = VSBoard(afterTurn, outImage, x1, y1, x4, y4)[0];
+			addPoints = VSBoard(afterTurn, outImage, x1, y1, x4, y4);
 
 			imshow("sumThreshold", outImage);
 
@@ -182,7 +182,7 @@ int changeTurn(int players, int x1, int y1,int x4, int y4){
 			temp = BackgroundSubtract(beforeTurn, afterTurn, Threshold);
 			cv::Mat outImage = temp.clone();
 			sumFilter(temp, outImage, sumThreshold);
-			addPoints = VSBoard(afterTurn, outImage, x1, y1, x4, y4)[0];
+			addPoints = VSBoard(afterTurn, outImage, x1, y1, x4, y4);
 
 			imshow("letters", temp);
 			imshow("sumThreshold", outImage);

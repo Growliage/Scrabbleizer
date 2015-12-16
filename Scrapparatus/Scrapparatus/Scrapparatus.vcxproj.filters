@@ -48,9 +48,6 @@
     <ClCompile Include="SOWPODSsearchBinary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="letterRecogition.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="pointCounter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -58,6 +55,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="scaling.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="letterRecognition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

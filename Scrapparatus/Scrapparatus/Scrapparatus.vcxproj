@@ -19,7 +19,7 @@
     <ClCompile Include="Dialate.cpp" />
     <ClCompile Include="histogramequalization.cpp" />
     <ClCompile Include="homography.cpp" />
-    <ClCompile Include="letterRecogition.cpp" />
+    <ClCompile Include="letterRecognition.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pointCounter.cpp" />
     <ClCompile Include="scaling.cpp" />

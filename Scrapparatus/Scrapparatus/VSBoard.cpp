@@ -11,7 +11,6 @@
 struct TileStruct {
 	bool newTile = false;	//Was the tile played this turn?
 	bool playablePos = false;	//Is it a playable position?
-	cv::String cvLetterTile = "";	//Because openCV doesn't cooperate unless it's treated like a special fucking snowflake.
 	char letterTile = '0';	//The letter found at the spcified coordinated
 	int tileValue;	//What kind of (premium) tile is it. Gotten from boardValues
 	int x, y;	//Tiles upper left corner (x,y) coords on the picture
@@ -19,14 +18,7 @@ struct TileStruct {
 	float h;	//Used to find the height of a single tile
 } tileInfo[15][15];
 
-std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x4, int y4){
-
-	std::vector<int> returnVector;
-	returnVector.push_back(0);	//Points (if any) awarded
-	returnVector.push_back(0);	//Did the player skip their turn(1 true, 0 false)
-	returnVector.push_back(0); //Was the word contested?
-	returnVector.push_back(0); //If it was contested, which player was it?
-	returnVector.push_back(0); //Was it successfully contested?
+int VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1, int x4, int y4){
 
 	/*Forward declarations*/
 	//Tile manipulators
@@ -86,15 +78,11 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 	}
 
 
-	bool keepRunning = true;
-
 	do{
 		std::vector<std::pair<int, int>> tileLoc = tileAnalyzer(imageSubtracted);	//Find where new tiles are placed
 
-		if (tileLoc.empty()){	
-			returnVector[1] = 1;
-			keepRunning = false;
-			return(returnVector);
+		if (tileLoc.empty()){	//If the returned value is empty, assume that no tiles were played
+			return(0);
 		}
 
 		std::string input = tileCropper(image, tileLoc);	//Have tileCropper send individual letters to letterRecognition
@@ -106,56 +94,35 @@ std::vector<int> VSBoard(cv::Mat image, cv::Mat imageSubtracted, int x1, int  y1
 			std::cin >> playerInput;
 
 			if (playerInput.compare("c") == 0 || playerInput.compare("C") == 0){
-				returnVector[2] = 1;
-				std::cout << "\nWhich player is contesting the word?" << std::endl;
-				int player;
-				std::cin >> player;
-				returnVector[3] = player;
 				bool validWord = SOWPODSsearch(input);
 
 				if (validWord == false){
 					std::cout << "\nThe word does not exist! Please remove the tiles.";
-					returnVector[4] = 1;
 					removeTiles(tileLoc);
+					return(0);
 
 				}
 				else {
-					std::cout << "\nThat is a real word.";
-					returnVector[0] = placeTiles(tileLoc, input);
-					keepRunning = false;
-					return(returnVector);
+					std::cout << "\nThat word exists";
+					return(placeTiles(tileLoc, input));
+
 				}
 			}
 			else {
-				returnVector[0] = placeTiles(tileLoc, input);
-				keepRunning = false;
-				return(returnVector);
+				return(placeTiles(tileLoc, input));
 			}
 		}
 		else {
 			std::cout << "\nInvalid placement.";
 		}
 
-		//Draw the virtual board
-		//cv::Mat currentBoard(image.rows, image.cols, CV_8UC1, cv::Scalar::zeros);
-		//imshow("Board", currentBoard);
-
-		for (int rows = 0; rows < 15; rows++){
-			for (int cols = 0; cols < 15; cols++){
-				cv::rectangle(image,
-					cv::Point(tileInfo[rows][cols].x, tileInfo[rows][cols].y), //Point 1
-					cv::Point(tileInfo[rows][cols].x + tileInfo[rows][cols].w, tileInfo[rows][cols].y + tileInfo[rows][cols].h), //point 2
-					CV_RGB(255, 255, 255), 1);
-			}
-		}
-
-	} while ( keepRunning == true);
+	} while (true);
 
 }
 
 std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted){
 
-	float threshold = 0.10;	//Threshold for when a location needs to be noted
+	float threshold = 0.10;	//Threshold for when a location needs to be noted (1 = all, 0 = none)
 
 	std::vector<std::pair<int, int>> tileLoc;
 	int totalPixelsinStruct = tileInfo[0][0].w * tileInfo[0][0].h;
@@ -178,8 +145,8 @@ std::vector<std::pair<int, int>> tileAnalyzer(cv::Mat imageSubtracted){
 
 			}
 
-		}	//Cols on image
-	}	//Rows on image
+		}	//Struct column
+	}	//Struct row
 
 	return(tileLoc);
 
@@ -189,14 +156,12 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 
 	//Forward declaration
 	std::string letterRecognition(cv::Mat imageSlice);
-	cv::Mat factorScaling(float Sx, float Sy, cv::Mat imageIn);	//Hail Mary! Let's hope this works.
-	//std::vector < std::vector<cv::Point2i> > FindBlobs(const cv::Mat &binary, std::vector < std::vector<cv::Point2i> > &blobs);
+	cv::Mat factorScaling(float Sx, float Sy, cv::Mat imageIn);
 
 	float Sf = 6;	//Factor to scale the image by
 	cv::Mat imageSlice;	//The image to send to letter recognition
 	cv::Mat imageROI;	//The region of interest that needs to be sliced
 	std::string sWord = "";	
-	//imshow("Full image", image);
 
 	for (int i = 0; i < tileLoc.size(); i++){
 		int x = tileInfo[tileLoc[i].first][tileLoc[i].second].x;
@@ -205,16 +170,12 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 		int h = tileInfo[tileLoc[i].first][tileLoc[i].second].h;
 		imageROI = image(cv::Rect(x, y, w, h));
 		imageROI.copyTo(imageSlice);
-		//imshow("slice", imageSlice);
 
-		cv::waitKey(0);
-
-
-
+		
 		std::string tempString = letterRecognition(imageSlice);
 
 		if (tempString == "Error"){
-			sWord.append("?");
+			sWord.append("?");	//Translate recognition errors to blank tiles
 		}
 		else {
 			sWord.append(tempString);
@@ -223,15 +184,13 @@ std::string tileCropper(cv::Mat image, std::vector<std::pair<int, int>> tileLoc)
 
 	for (int i = 0; i < sWord.length(); i++){
 		if (sWord.at(i) == '?'){
-			std::cout << "\nWhat is letter number " << i << "?" << std::endl;
+			std::cout << "\nWhat is letter number " << i + 1 << "?" << std::endl;	//Ask the player what letter is on a blank tile
 			char letter;
 			std::cin >> letter;
 			sWord.at(i) = letter;
 		}
 	}
-	cv::destroyAllWindows;
 	return(sWord);
-	//return("word");
 }
 
 bool checkTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
@@ -260,7 +219,7 @@ bool checkTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
 		}
 	}
 
-	bool validPlacement = playablePos && letterMatch;	//(AND GATE) Both statements must be true for it to be a valid placement of tiles
+	bool validPlacement = playablePos && letterMatch;	//(AND) Both statements must be true for it to be a valid placement of tiles
 
 	return(validPlacement);
 }
@@ -274,22 +233,21 @@ int placeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
 	bool allTiles = false;
 	std::vector<int> premiumTiles;
 
-	for (int i = 0; i < 15; i++){	//Lock in all tiles
+	for (int i = 0; i < 15; i++){	//Lock in all tiles on the board
 		for (int j = 0; j < 15; j++){
 			tileInfo[i][j].newTile = false;
 		}
 	}
 
 	for (int i = 0; i < tileLoc.size(); i++){
-		if (tileInfo[tileLoc[i].first][tileLoc[i].second].letterTile == '0'){	//Check if a tile is played on a blank space
+		if (tileInfo[tileLoc[i].first][tileLoc[i].second].letterTile == '0'){	//Check if a tile is played on an empty spot
 			tileInfo[tileLoc[i].first][tileLoc[i].second].newTile = true;	//Set position as newly played tile to allow for removing
 			tilesPlayed++;
 		}
 		premiumTiles.push_back(tileInfo[tileLoc[i].first][tileLoc[i].second].tileValue);	//Get the premium values for point counting
 		
 		tileInfo[tileLoc[i].first][tileLoc[i].second].letterTile = input.at(i);	//Set letter at position as a char
-		tileInfo[tileLoc[i].first][tileLoc[i].second].cvLetterTile = input.at(i);	//Set letter at position as cvString. Used to draw the board
-
+		
 		//Set playable positions around the played letters as true
 		tileInfo[(tileLoc[i].first) - 1][tileLoc[i].second].playablePos = true;
 		tileInfo[(tileLoc[i].first) + 1][tileLoc[i].second].playablePos = true;
@@ -309,11 +267,10 @@ int placeTiles(std::vector<std::pair<int, int>> tileLoc, std::string input){
 void removeTiles(std::vector<std::pair<int, int>> tileLoc){
 
 
-	for (int i = 0; i < 15; i++){	//Lock in all tiles
+	for (int i = 0; i < 15; i++){	
 		for (int j = 0; j < 15; j++){
-			if (tileInfo[i][j].newTile == true){
+			if (tileInfo[i][j].newTile == true){	//Remove the tile
 				tileInfo[i][j].letterTile = '0';
-				tileInfo[i][j].cvLetterTile = "";
 				tileInfo[i][j].newTile = false;
 			}
 		}
